@@ -19,12 +19,12 @@ prepare_env() {
 get_file() {
     srcfile="$(echo $file | awk -F: '{print $1}')"
     dstfile="$(echo $file | awk -F: '{print $2}')"
-    fsrc="$HOME/$DOTFILES/$srcfile"
+    dotsrc="$HOME/$DOTFILES/$srcfile"
 
     if [[ $dstfile = "" ]]; then
         dstfile=".$(basename "$srcfile")"
     fi
-
+    dotfile="$HOME/$dstfile"
 }
 run_install() {
     local overwrite_all=false backup_all=false skip_all=false
@@ -35,14 +35,8 @@ run_install() {
         exit 1
     fi
     for file in $srcfiles; do
-        srcfile="$(echo $file | awk -F: '{print $1}')"
-        dstfile="$(echo $file | awk -F: '{print $2}')"
-        dotsrc="$HOME/$DOTFILES/$srcfile"
-        if [[ $dstfile = "" ]]; then
-            dstfile=".$(basename "$srcfile")"
-        fi
-
-        SYMLINK_INTERACTIVE "$HOME/$DOTFILES/$srcfile" "$HOME/$file"
+        get_file "$file"
+        SYMLINK_INTERACTIVE "$dotsrc" "$dotfile"
     done
 
 }
