@@ -12,25 +12,40 @@ DOTFILES_ROOT="$(pwd -P)"
 current_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$current_dir/lib/utilities.sh"
 
-sync_rc() {
-    source "$current_dir/syncrc"
-}
-
 prepare_env() {
-    [ -z "$DOTFILES" ] && export DOTFILES=".dotfiles"
-    [ -z "$TERM" ] && export TERM="xterm-256color"
+    export DOTFILES=".dotfiles"
+    export TERM="xterm-256color"
 }
+get_file() {
+    srcfile="$(echo $file | awk -F: '{print $1}')"
+    dstfile="$(echo $file | awk -F: '{print $2}')"
+    fsrc="$HOME/$DOTFILES/$srcfile"
 
+    if [[ $dstfile = "" ]]; then
+        dstfile=".$(basename "$srcfile")"
+    fi
+
+}
 run_install() {
     local overwrite_all=false backup_all=false skip_all=false
+    syncrc="syncrc"
+    srcfiles="$(sed -n '/\[files\]/,/\[endfiles\]/p' $syncrc | grep -v '^\[.*files]' | grep -v ^#)"
+    if [[ -z "$srcfiles" ]]; then
+        echo "Specify files to sync in syncrc file"
+        exit 1
+    fi
+    for file in $srcfiles; do
+        srcfile="$(echo $file | awk -F: '{print $1}')"
+        dstfile="$(echo $file | awk -F: '{print $2}')"
+        dotsrc="$HOME/$DOTFILES/$srcfile"
+        if [[ $dstfile = "" ]]; then
+            dstfile=".$(basename "$srcfile")"
+        fi
 
-    #  for src in $(find -H "$DOTFILES_ROOT" -maxdepth 2 -name '*.symlink' -not -path '*.git*')
-    for src in sync_rc; do
-        dst="$HOME/.$(basename "${src%.*}")"
-        SYMLINK_INTERACTIVE "$src" "$dst"
+        SYMLINK_INTERACTIVE "$HOME/$DOTFILES/$srcfile" "$HOME/$file"
     done
-}
 
+}
 install_fonts() {
     if [ ! -d "$HOME/.local/share/fonts" ]; then
 
