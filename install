@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
+trap exit SIGINT
 
-#if [ ! -f 'lib/utilities.sh' ]; then
 git submodule --quiet sync --recursive
 git submodule --quiet update --init --recursive
 
-cd lib
+cd lib || exit 1
 git checkout master
-cd ..
-#fi
-DOTFILES_ROOT="$(pwd -P)"
-current_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-source "$current_dir/lib/utilities.sh"
+git pull
+cd .. || return
+
+source "lib/utilities.sh"
 
 prepare_env() {
     export DOTFILES=".dotfiles"
@@ -27,8 +26,7 @@ get_file() {
     dotfile="$HOME/$dstfile"
 }
 run_install() {
-    local overwrite_all='false' backup_all='false' skip_all='false'
-
+    #    local overwrite_all='false' backup_all='false' skip_all='false'
     syncrc="syncrc"
     srcfiles="$(sed -n '/\[files\]/,/\[endfiles\]/p' $syncrc | grep -v '^\[.*files]' | grep -v ^#)"
     if [[ -z "$srcfiles" ]]; then
@@ -47,9 +45,9 @@ install_fonts() {
         NOTIFY "Installing fonts"
 
         git clone https://github.com/powerline/fonts.git --depth=1
-        cd fonts
+        cd fonts || return
         ./install.sh
-        cd ..
+        cd .. || return
         rm -rf fonts
 
         #      git clone --depth=1 https://github.com/romkatv/nerd-fonts.git
