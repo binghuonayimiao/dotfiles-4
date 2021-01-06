@@ -1,9 +1,9 @@
 # ============================================================================= #
 #  ➜ ➜ ➜ ZSH
 # ============================================================================= #
-#if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-#  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-#fi
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
 for load in $HOME/.dotfiles/zsh/config/*.zsh; do
     if [ -r $load ]; then
         source $load
@@ -31,9 +31,11 @@ zplug "plugins/git", from:oh-my-zsh
 zplug "plugins/npm", from:oh-my-zsh
 zplug "plugins/yarn", from:oh-my-zsh
 zplug "plugins/nvm", from:oh-my-zsh
-zplug "plugins/cargo", from:oh-my-zsh
+zplug "plugins/docker", from:oh-my-zsh
+zplug "plugins/docker-machine", from:oh-my-zsh
+zplug "plugins/docker-compose", from:oh-my-zsh
 #zplug "plugins/asdf", from:oh-my-zsh
-#zplug "plugins/boot2docker", from:oh-my-zsh
+zplug "plugins/taskwarrior", from:oh-my-zsh
 zplug "plugins/sudo", from:oh-my-zsh
 zplug "plugins/extract", from:oh-my-zsh
 zplug "plugins/completion", from:oh-my-zsh
@@ -49,7 +51,7 @@ zplug "plugins/gpg-agent", from:oh-my-zsh
 # ============================================================================= #
 #  ➜ ➜ ➜ PREZTO
 # ============================================================================= #
-#zplug "modules/prompt", from:prezto
+#zplug "modules:prompt" from:prezto
 # ============================================================================= #
 #  ➜ ➜ ➜ ZPLUG EXTRAS
 # ============================================================================= #
@@ -58,7 +60,7 @@ zplug "plugins/gpg-agent", from:oh-my-zsh
 #zplug "lukechilds/zsh-nvm"
 #zplug "mattberther/zsh-pyenv"
 zplug "wuotr/zsh-plugin-vscode"
-zplug "MichaelAquilina/zsh-you-should-use"
+#zplug "MichaelAquilina/zsh-you-should-use"
 #zplug "unixorn/git-extra-commands"
 zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-autosuggestions"
@@ -68,7 +70,7 @@ zplug "lukechilds/zsh-better-npm-completion", defer:2
 # ============================================================================= #
 #  ➜ ➜ ➜ THEME
 # ============================================================================= #
-#zplug romkatv/powerlevel10k, as:theme, depth:1
+#zplug "romkatv/powerlevel10k", as:theme, depth:1
 #zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
 #zplug "themes/robbyrussell", from:oh-my-zsh, as:theme
 # ============================================================================= #

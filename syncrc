@@ -3,6 +3,12 @@ DOTFILES=.dotfiles
 
 [files]
 
+task
+task/taskrc
+
+git/gitconfig
+git/gitconfig.local
+
 zsh/zlogin
 zsh/zlogout
 zsh/zprofile
