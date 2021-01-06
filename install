@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-if [ ! -f 'lib/utilities.sh' ]; then
-    git submodule --quiet sync --recursive
-    git submodule --quiet update --init --recursive
+#if [ ! -f 'lib/utilities.sh' ]; then
+git submodule --quiet sync --recursive
+git submodule --quiet update --init --recursive
 
-    cd lib
-    git checkout master
-    cd ..
-fi
+cd lib
+git checkout master
+cd ..
+#fi
 DOTFILES_ROOT="$(pwd -P)"
 current_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$current_dir/lib/utilities.sh"
