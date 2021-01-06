@@ -19,7 +19,7 @@ source "${ZPLUG_HOME}/init.zsh"
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 
 # Oh-My-Zsh core
-zplug "lib/*.zsh", from:oh-my-zsh
+zplug "lib/*", from:oh-my-zsh
 # ============================================================================= #
 #  ➜ ➜ ➜ OH-MY-ZSH
 # ============================================================================= #
