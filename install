@@ -4,22 +4,16 @@
 # ============================================================================= #
 trap '' SIGINT SIGQUIT SIGTSTP
 
-git submodule --quiet sync --recursive
-git submodule --quiet update --init --recursive
+update_repo() {
+    git submodule --quiet sync --recursive
+    git submodule --quiet update --init --recursive
 
-cd lib || exit 1
-git checkout master
-git pull
-cd .. || return
+    cd lib || exit 1
+    git checkout master
+    cd .. || return
+}
 
-source "lib/utilities.sh" || echo "Couldn't load utilities" && exit 1
-
-DOTFILES_DIR() {
-    if [ ! -d "$HOME/.dotfiles" ]; then
-        DOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    else
-        DOTDIR="$HOME/.dotfiles"
-    fi
+config_set() {
     INSTALL_FONTS=${INSTALL_FONTS:-no}
     SYNCFILE="syncrc"
     SRCFILES="$(sed -n '/\[files\]/,/\[endfiles\]/p' $SYNCFILE | grep -v '^\[.*files]' | grep -v ^#)"
@@ -28,12 +22,17 @@ DOTFILES_DIR() {
         echo "Specify files to sync in syncrc file"
         exit 1
     fi
-
 }
 
 prepare_env() {
-    DOTFILES_DIR "$@"
+    source "lib/utilities.sh"
+    config_set
 
+    if [ ! -d "$HOME/.dotfiles" ]; then
+        DOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    else
+        DOTDIR="$HOME/.dotfiles"
+    fi
     # Skip setup if the user wants or stdin is closed (not running interactively).
     if [ $NOTTY = yes ]; then
         export overwrite_all='true' backup_all='false' skip_all='false'
@@ -78,6 +77,10 @@ run_install() {
         SYMLINK_INTERACTIVE "$dotsrc" "$dotfile"
     done
 }
+# ============================================================================= #
+#  ➜ ➜ ➜ TRAP
+# ============================================================================= #
+trap 'main' SIGINT SIGQUIT SIGTSTP
 
 main() {
     # Run as unattended if stdin is not a tty
@@ -97,8 +100,9 @@ main() {
 
     TITLE "Running auto install"
 
-    prepare_env "$@"
-    run_install "$@"
+    update_repo
+    prepare_env
+    run_install
 
     exit 0
 
