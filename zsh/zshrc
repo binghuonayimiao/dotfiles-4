@@ -80,7 +80,7 @@ zplug load
 # ============================================================================= #
 #  ➜ ➜ ➜ EXTRAS
 # ============================================================================= #
-[ -a ~/.localrc ] && source ~/.localrc ## Load local environment variables
+[ -f ~/.localrc ] && source ~/.localrc ## Load local environment variables
 [ -f ~/.config/fzf/key-bindings.zsh ] && source ~/.config/fzf/key-bindings.zsh
 [ -f ~/.config/fzf/completion.zsh ] && source ~/.config/fzf/completion.zsh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
