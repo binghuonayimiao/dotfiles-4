@@ -1,0 +1,58 @@
+#!/usr/bin/env zsh
+
+if [ ! -f 'lib/utilities.sh' ]; then
+    git submodule --quiet sync --recursive
+    git submodule --quiet update --init --recursive
+
+    cd lib
+    git checkout master
+    cd ..
+fi
+source "lib/utilities.sh"
+
+sync_rc() {
+    source "syncrc"
+}
+
+prepare_env() {
+    [ -z "$DOTFILES" ] && export DOTFILES=".dotfiles"
+    [ -z "$TERM" ] && export TERM="xterm-256color"
+}
+
+run_install() {
+    local overwrite_all=false backup_all=false skip_all=false
+
+    #  for src in $(find -H "$DOTFILES_ROOT" -maxdepth 2 -name '*.symlink' -not -path '*.git*')
+    for src in sync_rc; do
+        dst="$HOME/.$(basename "${src%.*}")"
+        SYMLINK_INTERACTIVE "$src" "$dst"
+    done
+}
+
+install_fonts() {
+    if [ ! -d "$HOME/.local/share/fonts" ]; then
+
+        NOTIFY "Installing fonts"
+
+        git clone https://github.com/powerline/fonts.git --depth=1
+        cd fonts
+        ./install.sh
+        cd ..
+        rm -rf fonts
+
+        #      git clone --depth=1 https://github.com/romkatv/nerd-fonts.git
+        #      cd nerd-fonts
+        #      ./build 'Meslo/S/*'
+        #      cd ..
+        #      rm -rf nerd-fonts
+    fi
+}
+
+main() {
+    TITLE "Running auto install"
+    prepare_env
+
+}
+while true; do
+    main
+done

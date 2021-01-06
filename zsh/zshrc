@@ -1,0 +1,86 @@
+# ============================================================================= #
+#  ➜ ➜ ➜ ZSH
+# ============================================================================= #
+for load in $HOME/.dotfiles/zsh/config/*.zsh; do
+    if [ -r $load ]; then
+        source $load
+    fi
+done
+for function in $HOME/.dotfiles/zsh/functions/*.zsh; do
+    if [ -r $function ]; then
+        source $function
+    fi
+done
+unset load function
+# ============================================================================= #
+#  ➜ ➜ ➜ ZPLUG
+# ============================================================================= #
+export ZPLUG_HOME="${XDG_CONFIG_HOME}/.zplug"
+[ ! -d "$ZPLUG_HOME" ] && mkdir -p "$ZPLUG_HOME"
+[ ! -f "$ZPLUG_HOME/init.zsh" ] && git clone https://github.com/ss-o/zplug "$ZPLUG_HOME"
+source "${ZPLUG_HOME}/init.zsh"
+
+## Let zplug manage itself like other packages
+zplug 'zplug/zplug', hook-build:'zplug --self-manage'
+
+# Oh-My-Zsh core
+zplug "lib/*", from:oh-my-zsh
+# ============================================================================= #
+#  ➜ ➜ ➜ OH-MY-ZSH
+# ============================================================================= #
+zplug "plugins/history-substring-search", from:oh-my-zsh
+zplug "plugins/git", from:oh-my-zsh
+zplug "plugins/npm", from:oh-my-zsh
+zplug "plugins/yarn", from:oh-my-zsh
+zplug "plugins/nvm", from:oh-my-zsh
+zplug "plugins/sudo", from:oh-my-zsh
+zplug "plugins/extract", from:oh-my-zsh
+zplug "plugins/completion", from:oh-my-zsh
+zplug "plugins/ssh-agent", from:oh-my-zsh
+zplug "plugins/gpg-agent", from:oh-my-zsh
+# ============================================================================= #
+#  ➜ ➜ ➜ GIST
+# ============================================================================= #
+#zplug "ss-o/f78cf2f331ed83d158c1a70d613da1fa", \
+#    from:gist, \
+#    as:command, \
+#    use:progbar
+
+zplug "zsh-users/zsh-autosuggestions" # It suggests commands as you type based on history and completions.
+zplug "zsh-users/zsh-completions"
+zplug "zdharma/fast-syntax-highlighting"
+zplug "hlissner/zsh-autopair", defer:2
+zplug "lukechilds/zsh-better-npm-completion", defer:2
+# ============================================================================= #
+#  ➜ ➜ ➜ ZPLUG EXTRAS
+# ============================================================================= #
+zplug "zpm-zsh/ls" # ls alias (ls colors)
+zplug "desyncr/auto-ls"
+#zplug "lukechilds/zsh-nvm"
+#zplug "mattberther/zsh-pyenv"
+zplug "wuotr/zsh-plugin-vscode"
+zplug "MichaelAquilina/zsh-you-should-use"
+zplug "unixorn/git-extra-commands" #This plugin will inform the user if some dependencies missing and show instruction for installation.
+# ============================================================================= #
+#  ➜ ➜ ➜ THEME
+# ============================================================================= #
+#zplug romkatv/powerlevel10k, as:theme, depth:1
+zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
+# ============================================================================= #
+#  ➜ ➜ ➜ LOCAL
+# ============================================================================= #
+zplug "$HOME/$DOTFILES/zsh/plugins", from:local
+# ============================================================================= #
+#  ➜ ➜ ➜ INSTALL ZPLUG & LOAD
+# ============================================================================= #
+if ! zplug check --verbose; then
+    zplug install
+fi
+zplug load
+# ============================================================================= #
+#  ➜ ➜ ➜ EXTRAS
+# ============================================================================= #
+[ -a ~/.localrc ] && source ~/.localrc ## Load local environment variables
+[ -f ~/.config/fzf/key-bindings.zsh ] && source ~/.config/fzf/key-bindings.zsh
+[ -f ~/.config/fzf/completion.zsh ] && source ~/.config/fzf/completion.zsh
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
