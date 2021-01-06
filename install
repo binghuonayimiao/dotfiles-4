@@ -27,6 +27,8 @@ get_file() {
     dotfile="$HOME/$dstfile"
 }
 run_install() {
+    local overwrite_all='false' backup_all='false' skip_all='false'
+
     syncrc="syncrc"
     srcfiles="$(sed -n '/\[files\]/,/\[endfiles\]/p' $syncrc | grep -v '^\[.*files]' | grep -v ^#)"
     if [[ -z "$srcfiles" ]]; then
