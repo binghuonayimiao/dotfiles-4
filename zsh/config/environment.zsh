@@ -6,6 +6,7 @@ export TERM="xterm-256color"
 export NAME='Salvydas Lukosius'
 export EMAIL='sall@w-ss.io'
 export GITHUB_USER='ss-o'
+export GITLAB_USER='ss-o'
 #export TRAVIS_USER=""
 
 export XDG_CONFIG_HOME="${HOME}/.config"
