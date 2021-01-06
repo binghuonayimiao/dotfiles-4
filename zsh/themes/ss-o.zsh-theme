@@ -5,7 +5,7 @@ prompt() {
         local USERNAME="%n"
     fi
     PROMPT="%{$fg_bold[blue]%}${USERNAME} %(?:%{$reset_color%}➜ :%{$fg_bold[red]%}➜ )"
-    PROMPT+='%{$fg_bold[blue]%}%~%{$reset_color%} $(git_prompt_info)$(branch_prompt_info)%{$fg[white]%}$ %{$reset_color%}'
+    PROMPT+='%{$fg_bold[blue]%}%~%{$reset_color%} $(git_prompt_info)%{$fg[white]%} %{$reset_color%}'
 }
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[cyan]%}(%{$fg_bold[red]%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
