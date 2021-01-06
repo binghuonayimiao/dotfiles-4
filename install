@@ -9,10 +9,11 @@ if [ ! -f 'lib/utilities.sh' ]; then
     cd ..
 fi
 DOTFILES_ROOT="$(pwd -P)"
-source "lib/utilities.sh"
+current_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$current_dir/lib/utilities.sh"
 
 sync_rc() {
-    source "syncrc"
+    source "$current_dir/syncrc"
 }
 
 prepare_env() {
