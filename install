@@ -25,6 +25,7 @@ main() {
     TITLE "Running auto install"
     ./bin/dosync
 
+    exec "$SHELL"
     exit 0
 
 }
