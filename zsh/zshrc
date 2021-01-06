@@ -64,6 +64,7 @@ zplug "unixorn/git-extra-commands" #This plugin will inform the user if some dep
 # ============================================================================= #
 #  ➜ ➜ ➜ THEME
 # ============================================================================= #
+ZSH_THEME="robbyrussell"
 #zplug romkatv/powerlevel10k, as:theme, depth:1
 #zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
 # ============================================================================= #
