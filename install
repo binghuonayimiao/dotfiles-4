@@ -3,26 +3,15 @@
 #  ➜ ➜ ➜ TRAP
 # ============================================================================= #
 trap '' SIGINT SIGQUIT SIGTSTP
-checkcmd() { command -v "$1" >/dev/null 2>&1; }
-prepare_repo() {
-    if checkcmd git; then
-        echo "[✔]::Git"
-        sleep 3
-    else
-        echo "[x]::this script require Git"
-        sleep 3
-        exit 1
-    fi
 
-    git submodule --quiet sync --recursive
-    git submodule --quiet update --init --recursive
+git submodule --quiet sync --recursive
+git submodule --quiet update --init --recursive
 
-    cd lib || exit 1
-    git checkout master
-    git pull
-    cd .. || return
-}
-prepare_repo
+cd lib || exit 1
+git checkout master
+git pull
+cd .. || return
+
 source "lib/utilities.sh" || echo "Couldn't load utilities" && exit 1
 
 DOTFILES_DIR() {
@@ -31,10 +20,6 @@ DOTFILES_DIR() {
     else
         DOTDIR="$HOME/.dotfiles"
     fi
-}
-
-prepare_env() {
-    DOTFILES_DIR
     INSTALL_FONTS=${INSTALL_FONTS:-no}
     SYNCFILE="syncrc"
     SRCFILES="$(sed -n '/\[files\]/,/\[endfiles\]/p' $SYNCFILE | grep -v '^\[.*files]' | grep -v ^#)"
@@ -43,6 +28,11 @@ prepare_env() {
         echo "Specify files to sync in syncrc file"
         exit 1
     fi
+
+}
+
+prepare_env() {
+    DOTFILES_DIR "$@"
 
     # Skip setup if the user wants or stdin is closed (not running interactively).
     if [ $NOTTY = yes ]; then
