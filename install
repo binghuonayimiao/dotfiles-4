@@ -4,50 +4,69 @@
 # ============================================================================= #
 trap '' SIGINT SIGQUIT SIGTSTP
 
-checkgit() {
-    which git >/dev/null 2>&1
-    if [ "$?" -eq "0" ]; then
-        echo "[✔]::[Git]"
-        sleep 3
-        return
+checkcmd() { command -v "$1" >/dev/null 2>&1; }
+
+if checkcmd git; then
+    echo "[✔]::Git"
+    sleep 3
+else
+    echo "[x]::this script require Git"
+    sleep 3
+    exit 1
+fi
+
+git submodule --quiet sync --recursive
+git submodule --quiet update --init --recursive
+
+cd lib || exit 1
+git checkout master
+git pull
+cd .. || return
+
+source "lib/utilities.sh" || echo "Couldn't load utilities" && exit 1
+
+DOTFILES_DIR() {
+    if [ ! -d "$HOME/.dotfiles" ]; then
+        DOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
     else
-        echo "[x]::this script require Git"
-        sleep 3
-        exit 1
+        DOTDIR="$HOME/.dotfiles"
     fi
 }
 
-prepare_repo() {
-    checkgit
-
-    git submodule --quiet sync --recursive
-    git submodule --quiet update --init --recursive
-
-    cd lib || exit 1
-    git checkout master
-    git pull
-    cd .. || return
-}
-source "lib/utilities.sh"
-
 prepare_env() {
-    CURRENT_DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    DOTFILES=".dotfiles"
-    SYNCFILES="syncrc"
-    srcfiles="$(sed -n '/\[files\]/,/\[endfiles\]/p' $SYNCFILES | grep -v '^\[.*files]' | grep -v ^#)"
+    DOTFILES_DIR
+    INSTALL_FONTS=${INSTALL_FONTS:-no}
+    SYNCFILE="syncrc"
+    SRCFILES="$(sed -n '/\[files\]/,/\[endfiles\]/p' $SYNCFILE | grep -v '^\[.*files]' | grep -v ^#)"
 
-    if [[ -z "$srcfiles" ]]; then
+    if [[ -z "$SRCFILES" ]]; then
         echo "Specify files to sync in syncrc file"
         exit 1
     fi
 
     # Skip setup if the user wants or stdin is closed (not running interactively).
-    if [ $NOTTY = no ]; then
-        return
+    if [ $NOTTY = yes ]; then
+        export overwrite_all='true' backup_all='false' skip_all='false'
     else
+        export overwrite_all='false' backup_all='false' skip_all='false'
         export TERM="xterm-256color"
     fi
+    if [ $INSTALL_FONTS = yes ]; then
 
+        NOTIFY "Installing fonts"
+
+        git clone https://github.com/powerline/fonts.git --depth=1
+        cd fonts || return
+        ./install.sh
+        cd .. || return
+        rm -rf fonts
+
+        #      git clone --depth=1 https://github.com/romkatv/nerd-fonts.git
+        #      cd nerd-fonts
+        #      ./build 'Meslo/S/*'
+        #      cd ..
+        #      rm -rf nerd-fonts
+    fi
     #    # If this user's login shell is already "zsh", do not attempt to switch.
     #    if [ "$(basename -- "$SHELL")" = "zsh" ]; then
     #        return
@@ -56,7 +75,7 @@ prepare_env() {
 get_file() {
     srcfile="$(echo $file | awk -F: '{print $1}')"
     dstfile="$(echo $file | awk -F: '{print $2}')"
-    dotsrc="$CURRENT_DOTFILES_DIR/$srcfile"
+    dotsrc="$DOTDIR/$srcfile"
 
     if [[ $dstfile = "" ]]; then
         dstfile=".$(basename "$srcfile")"
@@ -64,28 +83,10 @@ get_file() {
     dotfile="$HOME/$dstfile"
 }
 run_install() {
-
-    for file in $srcfiles; do
+    for file in $SRCFILES; do
         get_file "$file"
         SYMLINK_INTERACTIVE "$dotsrc" "$dotfile"
     done
-
-}
-
-install_fonts() {
-    NOTIFY "Installing fonts"
-
-    git clone https://github.com/powerline/fonts.git --depth=1
-    cd fonts || return
-    ./install.sh
-    cd .. || return
-    rm -rf fonts
-
-    #      git clone --depth=1 https://github.com/romkatv/nerd-fonts.git
-    #      cd nerd-fonts
-    #      ./build 'Meslo/S/*'
-    #      cd ..
-    #      rm -rf nerd-fonts
 }
 
 main() {
@@ -99,13 +100,16 @@ main() {
     while [ $# -gt 0 ]; do
         case $1 in
         --unattended) NOTTY=yes ;;
+        --fonts) INSTALL_FONTS=yes ;;
         esac
         shift
     done
+
     TITLE "Running auto install"
 
     prepare_env "$@"
     run_install "$@"
+
     exit 0
 
 }
