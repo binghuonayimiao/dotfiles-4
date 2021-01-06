@@ -56,7 +56,7 @@ zplug "MichaelAquilina/zsh-you-should-use"
 zplug "unixorn/git-extra-commands"
 zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-autosuggestions"
-zplug "zdharma/fast-syntax-highlighting" defer:2
+zplug "zdharma/fast-syntax-highlighting", defer:2
 zplug "hlissner/zsh-autopair", defer:2
 zplug "lukechilds/zsh-better-npm-completion", defer:2
 # ============================================================================= #
