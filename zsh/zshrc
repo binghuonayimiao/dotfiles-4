@@ -71,7 +71,7 @@ zplug "lukechilds/zsh-better-npm-completion", defer:2
 # ============================================================================= #
 #  ➜ ➜ ➜ LOCAL
 # ============================================================================= #
-zplug "$HOME/$DOTFILES/zsh/plugins", from:local, defer:2
+zplug "$HOME/$DOTFILES/zsh/plugins", from:local
 zplug "$HOME/$DOTFILES/zsh/themes", use:ss-o.zsh-theme, from:local, as:theme
 # ============================================================================= #
 #  ➜ ➜ ➜ INSTALL ZPLUG & LOAD
@@ -79,7 +79,7 @@ zplug "$HOME/$DOTFILES/zsh/themes", use:ss-o.zsh-theme, from:local, as:theme
 if ! zplug check --verbose; then
     zplug install
 fi
-zplug load --verbose
+zplug load
 # ============================================================================= #
 #  ➜ ➜ ➜ EXTRAS
 # ============================================================================= #
