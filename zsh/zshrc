@@ -1,6 +1,9 @@
 # ============================================================================= #
 #  ➜ ➜ ➜ ZSH
 # ============================================================================= #
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
 for load in $HOME/.dotfiles/zsh/config/*.zsh; do
     if [ -r $load ]; then
         source $load
@@ -10,9 +13,9 @@ unset load
 # ============================================================================= #
 #  ➜ ➜ ➜ ZPLUG
 # ============================================================================= #
-export ZPLUG_HOME="${XDG_CONFIG_HOME}/.zplug"
+export ZPLUG_HOME="${XDG_CONFIG_HOME}/zplug"
 [ ! -d "$ZPLUG_HOME" ] && mkdir -p "$ZPLUG_HOME"
-[ ! -f "$ZPLUG_HOME/init.zsh" ] && git clone https://github.com/ss-o/zplug "$ZPLUG_HOME"
+[ ! -f "$ZPLUG_HOME/init.zsh" ] && git clone https://github.com/zplug/zplug "$ZPLUG_HOME"
 source "${ZPLUG_HOME}/init.zsh"
 
 ## Let zplug manage itself like other packages
@@ -50,13 +53,13 @@ zplug "plugins/gpg-agent", from:oh-my-zsh
 # ============================================================================= #
 #  ➜ ➜ ➜ ZPLUG EXTRAS
 # ============================================================================= #
-zplug "zpm-zsh/ls" # ls alias (ls colors)
-zplug "desyncr/auto-ls"
+#zplug "zpm-zsh/ls" # ls alias (ls colors)
+#zplug "desyncr/auto-ls"
 #zplug "lukechilds/zsh-nvm"
 #zplug "mattberther/zsh-pyenv"
 zplug "wuotr/zsh-plugin-vscode"
 zplug "MichaelAquilina/zsh-you-should-use"
-zplug "unixorn/git-extra-commands"
+#zplug "unixorn/git-extra-commands"
 zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-autosuggestions"
 zplug "zdharma/fast-syntax-highlighting", defer:2
@@ -87,3 +90,13 @@ zplug load
 [ -f ~/.config/fzf/key-bindings.zsh ] && source ~/.config/fzf/key-bindings.zsh
 [ -f ~/.config/fzf/completion.zsh ] && source ~/.config/fzf/completion.zsh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+# ============================================================================= #
+#  ➜ ➜ ➜ p10k 
+# ============================================================================= #
+#source ~/.dotfiles/zsh/config/p10k/p10k-lean.zsh
+#source ~/.dotfiles/zsh/config/p10k/p10k-classic.zsh
+#source ~/.dotfiles/zsh/config/p10k/p10k-rainbow.zsh
+#source ~/.dotfiles/zsh/config/p10k/p10k-lean-8colors.zsh
+#source ~/.dotfiles/zsh/config/p10k/p10k-robbyrussell.zsh
+#source ~/.dotfiles/zsh/config/p10k/p10k-robby-by-sall.zsh
+
