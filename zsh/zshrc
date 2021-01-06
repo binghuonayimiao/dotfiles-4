@@ -28,6 +28,8 @@ zplug "plugins/git", from:oh-my-zsh
 zplug "plugins/npm", from:oh-my-zsh
 zplug "plugins/yarn", from:oh-my-zsh
 zplug "plugins/nvm", from:oh-my-zsh
+#zplug "plugins/asdf", from:oh-my-zsh
+#zplug "plugins/boot2docker", from:oh-my-zsh
 zplug "plugins/sudo", from:oh-my-zsh
 zplug "plugins/extract", from:oh-my-zsh
 zplug "plugins/completion", from:oh-my-zsh
