@@ -1,6 +1,4 @@
-# Branch: displays the current Git or Mercurial branch fast.
-# Victor Torres <vpaivatorres@gmail.com>
-# Oct 2, 2015
+
 
 function branch_prompt_info() {
   # Defines path as current directory

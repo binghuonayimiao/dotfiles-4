@@ -1,3 +1,6 @@
+
+DEPENDENCES_ARCH+=( python-pygmentize )
+DEPENDENCES_DEBIAN+=( python-pygmentize )
 # Easier alias to use the plugin
 alias ccat="colorize_cat"
 alias cless="colorize_less"
