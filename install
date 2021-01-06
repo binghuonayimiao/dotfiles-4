@@ -1,24 +1,62 @@
 #!/usr/bin/env bash
-trap exit SIGINT
+# ============================================================================= #
+#  ➜ ➜ ➜ TRAP
+# ============================================================================= #
+trap '' SIGINT SIGQUIT SIGTSTP
 
-git submodule --quiet sync --recursive
-git submodule --quiet update --init --recursive
+checkgit() {
+    which git >/dev/null 2>&1
+    if [ "$?" -eq "0" ]; then
+        echo "[✔]::[Git]"
+        sleep 3
+        return
+    else
+        echo "[x]::this script require Git"
+        sleep 3
+        exit 1
+    fi
+}
 
-cd lib || exit 1
-git checkout master
-git pull
-cd .. || return
+prepare_repo() {
+    checkgit
 
+    git submodule --quiet sync --recursive
+    git submodule --quiet update --init --recursive
+
+    cd lib || exit 1
+    git checkout master
+    git pull
+    cd .. || return
+}
 source "lib/utilities.sh"
 
 prepare_env() {
-    export DOTFILES=".dotfiles"
-    export TERM="xterm-256color"
+    CURRENT_DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+    DOTFILES=".dotfiles"
+    SYNCFILES="syncrc"
+    srcfiles="$(sed -n '/\[files\]/,/\[endfiles\]/p' $SYNCFILES | grep -v '^\[.*files]' | grep -v ^#)"
+
+    if [[ -z "$srcfiles" ]]; then
+        echo "Specify files to sync in syncrc file"
+        exit 1
+    fi
+
+    # Skip setup if the user wants or stdin is closed (not running interactively).
+    if [ $NOTTY = no ]; then
+        return
+    else
+        export TERM="xterm-256color"
+    fi
+
+    #    # If this user's login shell is already "zsh", do not attempt to switch.
+    #    if [ "$(basename -- "$SHELL")" = "zsh" ]; then
+    #        return
+    #    fi
 }
 get_file() {
     srcfile="$(echo $file | awk -F: '{print $1}')"
     dstfile="$(echo $file | awk -F: '{print $2}')"
-    dotsrc="$HOME/$DOTFILES/$srcfile"
+    dotsrc="$CURRENT_DOTFILES_DIR/$srcfile"
 
     if [[ $dstfile = "" ]]; then
         dstfile=".$(basename "$srcfile")"
@@ -26,38 +64,44 @@ get_file() {
     dotfile="$HOME/$dstfile"
 }
 run_install() {
-    syncrc="syncrc"
-    srcfiles="$(sed -n '/\[files\]/,/\[endfiles\]/p' $syncrc | grep -v '^\[.*files]' | grep -v ^#)"
-    if [[ -z "$srcfiles" ]]; then
-        echo "Specify files to sync in syncrc file"
-        exit 1
-    fi
+
     for file in $srcfiles; do
         get_file "$file"
         SYMLINK_INTERACTIVE "$dotsrc" "$dotfile"
     done
 
 }
+
 install_fonts() {
-    if [ ! -d "$HOME/.local/share/fonts" ]; then
+    NOTIFY "Installing fonts"
 
-        NOTIFY "Installing fonts"
+    git clone https://github.com/powerline/fonts.git --depth=1
+    cd fonts || return
+    ./install.sh
+    cd .. || return
+    rm -rf fonts
 
-        git clone https://github.com/powerline/fonts.git --depth=1
-        cd fonts || return
-        ./install.sh
-        cd .. || return
-        rm -rf fonts
-
-        #      git clone --depth=1 https://github.com/romkatv/nerd-fonts.git
-        #      cd nerd-fonts
-        #      ./build 'Meslo/S/*'
-        #      cd ..
-        #      rm -rf nerd-fonts
-    fi
+    #      git clone --depth=1 https://github.com/romkatv/nerd-fonts.git
+    #      cd nerd-fonts
+    #      ./build 'Meslo/S/*'
+    #      cd ..
+    #      rm -rf nerd-fonts
 }
 
 main() {
+    # Run as unattended if stdin is not a tty
+    if [ ! -t 0 ]; then
+        NOTTY=yes
+    else
+        NOTTY=no
+    fi
+
+    while [ $# -gt 0 ]; do
+        case $1 in
+        --unattended) NOTTY=yes ;;
+        esac
+        shift
+    done
     TITLE "Running auto install"
 
     prepare_env "$@"
