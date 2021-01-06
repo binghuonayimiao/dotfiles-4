@@ -1,8 +1,14 @@
-PROMPT="%(?:%{$fg_bold[green]%}➜ :%{$fg_bold[red]%}➜ )"
-#PROMPT+='${ret_status}%{$fg_bold[green]%}%p %{$fg[cyan]%}%c %{$fg_bold[blue]%}$(git_prompt_info)$(branch_prompt_info)%{$fg_bold[blue]%} % %{$reset_color%}'
-PROMPT+=' %{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)$(branch_prompt_info)'
-
-ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}git:(%{$fg[red]%}"
+prompt() {
+    if [ ! -z "${GITHUB_USER}" ]; then
+        local USERNAME="@${GITHUB_USER}"
+    else
+        local USERNAME="%n"
+    fi
+    PROMPT="%{$fg_bold[blue]%}${USERNAME} %(?:%{$reset_color%}➜ :%{$fg_bold[red]%}➜ )"
+    PROMPT+='%{$fg_bold[blue]%}%~%{$reset_color%} $(git_prompt_info)$(branch_prompt_info)%{$fg[white]%}$ %{$reset_color%}'
+}
+ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[cyan]%}(%{$fg_bold[red]%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
-ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[blue]%}) %{$fg[yellow]%}✗"
-ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[blue]%})"
+ZSH_THEME_GIT_PROMPT_DIRTY=" %{$fg_bold[yellow]%}✗%{$fg_bold[cyan]%})"
+ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg_bold[cyan]%})"
+prompt

@@ -79,7 +79,7 @@ zplug "$HOME/$DOTFILES/zsh/themes", use:robby-by-sall.zsh-theme, from:local, as:
 if ! zplug check --verbose; then
     zplug install
 fi
-zplug load
+zplug load --verbose
 # ============================================================================= #
 #  ➜ ➜ ➜ EXTRAS
 # ============================================================================= #
