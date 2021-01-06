@@ -2,7 +2,7 @@
 # ============================================================================= #
 #  ➜ ➜ ➜ TRAP
 # ============================================================================= #
-trap '' SIGINT SIGQUIT SIGTSTP
+trap 'exit' SIGINT SIGQUIT SIGTSTP
 
 update_repo() {
     git submodule --quiet sync --recursive
@@ -13,97 +13,19 @@ update_repo() {
     cd .. || return
 }
 
-config_set() {
-    INSTALL_FONTS=${INSTALL_FONTS:-no}
-    SYNCFILE="syncrc"
-    SRCFILES="$(sed -n '/\[files\]/,/\[endfiles\]/p' $SYNCFILE | grep -v '^\[.*files]' | grep -v ^#)"
-
-    if [[ -z "$SRCFILES" ]]; then
-        echo "Specify files to sync in syncrc file"
-        exit 1
-    fi
-}
-
 prepare_env() {
     source "lib/utilities.sh"
-    config_set
-
-    if [ ! -d "$HOME/.dotfiles" ]; then
-        DOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-    else
-        DOTDIR="$HOME/.dotfiles"
-    fi
-    # Skip setup if the user wants or stdin is closed (not running interactively).
-    if [ $NOTTY = yes ]; then
-        export overwrite_all='true' backup_all='false' skip_all='false'
-    else
-        export overwrite_all='false' backup_all='false' skip_all='false'
-        export TERM="xterm-256color"
-    fi
-    if [ $INSTALL_FONTS = yes ]; then
-
-        NOTIFY "Installing fonts"
-
-        git clone https://github.com/powerline/fonts.git --depth=1
-        cd fonts || return
-        ./install.sh
-        cd .. || return
-        rm -rf fonts
-
-        #      git clone --depth=1 https://github.com/romkatv/nerd-fonts.git
-        #      cd nerd-fonts
-        #      ./build 'Meslo/S/*'
-        #      cd ..
-        #      rm -rf nerd-fonts
-    fi
-    #    # If this user's login shell is already "zsh", do not attempt to switch.
-    #    if [ "$(basename -- "$SHELL")" = "zsh" ]; then
-    #        return
-    #    fi
 }
-get_file() {
-    srcfile="$(echo $file | awk -F: '{print $1}')"
-    dstfile="$(echo $file | awk -F: '{print $2}')"
-    dotsrc="$DOTDIR/$srcfile"
-
-    if [[ $dstfile = "" ]]; then
-        dstfile=".$(basename "$srcfile")"
-    fi
-    dotfile="$HOME/$dstfile"
-}
-run_install() {
-    for file in $SRCFILES; do
-        get_file "$file"
-        SYMLINK_INTERACTIVE "$dotsrc" "$dotfile"
-    done
-}
-# ============================================================================= #
-#  ➜ ➜ ➜ TRAP
-# ============================================================================= #
-trap 'main' SIGINT SIGQUIT SIGTSTP
 
 main() {
-    # Run as unattended if stdin is not a tty
-    if [ ! -t 0 ]; then
-        NOTTY=yes
-    else
-        NOTTY=no
-    fi
-
-    while [ $# -gt 0 ]; do
-        case $1 in
-        --unattended) NOTTY=yes ;;
-        --fonts) INSTALL_FONTS=yes ;;
-        esac
-        shift
-    done
-
-    TITLE "Running auto install"
 
     update_repo
     prepare_env
-    run_install
 
+    TITLE "Running auto install"
+    ./bin/dosync
+
+    exec "$SHELL"
     exit 0
 
 }

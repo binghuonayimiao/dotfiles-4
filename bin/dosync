@@ -1,0 +1,204 @@
+#!/usr/bin/env bash
+# ============================================================================= #
+#  ➜ ➜ ➜ TRAP
+# ============================================================================= #
+trap 'exit' SIGINT SIGQUIT SIGTSTP
+if [[ -z "$DOTFILES" ]]; then
+    DOTFILES=".dotfiles"
+fi
+source "$HOME/$DOTFILES/lib/utilities.sh"
+
+NEVER_ROOT
+# ============================================================================= #
+SYNCFILE="$HOME/$DOTFILES/syncrc"
+GITOPT="-q"
+GITSUB="--quiet"
+ACTION=""
+INSTALL_FONTS="${INSTALL_FONTS:-no}"
+# ============================================================================= #
+removebrokenlinks() {
+    #  if [[ "$VERBOSE" == True ]]; then
+    #    echo "*** Removing broken symlinks from $HOME ***"
+    #  fi
+    find $HOME -maxdepth 1 -name ".*" -type l | while read f; do if [ ! -e "$f" ]; then rm -f "$f"; fi; done
+}
+
+isgitlayout() {
+    if [[ ! -d .git ]]; then
+        echo "Not a git repository"
+        exit 1
+    fi
+}
+
+initlocal() {
+    cd "$HOME/$DOTFILES"
+    isgitlayout
+    # init the main repo
+    git submodule $GITSUB update --init --recursive
+    cd
+}
+
+getgitorigin() {
+    cd "$HOME/$DOTFILES"
+    if [[ -d .git ]]; then
+        ORIGIN=$(git config -l | grep remote.origin.url | awk -F'=' '{print $2}')
+    fi
+    cd
+}
+
+checkin() {
+    git add .
+    gitcommit && gitpush
+}
+
+gitpull() {
+    getgitorigin
+    cd "$HOME/$DOTFILES"
+    isgitlayout
+    echo "Pulling latest changes from $ORIGIN"
+    git pull $GITOPT
+    if [[ "$ACTION" = "all" ]]; then
+        cd "$HOME/$DOTFILES"
+        echo "Pulling latest changes for submodules"
+        # Required if a submodule origin changed
+        git submodule $GITSUBOPT sync
+        git submodule $GITSUBOPT foreach --recursive git fetch
+        git submodule $GITSUBOPT update --init --recursive
+    fi
+    cd
+}
+
+gitcommit() {
+    getgitorigin
+    cd "$HOME/$DOTFILES"
+    echo "Commiting latest changes to the repository"
+    git commit -a $GITOPT
+    cd
+}
+
+gitpush() {
+    getgitorigin
+    cd "$HOME/$DOTFILES"
+    echo "Pushing changes upstream to $ORIGIN" &&
+        git push $GITOPT
+    cd
+}
+
+sync_options() {
+    # Skip setup if the user wants or stdin is closed (not running interactively).
+    if [ $NOTTY = yes ]; then
+        export overwrite_all='true' backup_all='false' skip_all='false'
+    else
+        export overwrite_all='false' backup_all='false' skip_all='false'
+        export TERM="xterm-256color"
+    fi
+
+    if [ $INSTALL_FONTS = yes ]; then
+
+        NOTIFY "Installing fonts"
+
+        git clone https://github.com/powerline/fonts.git --depth=1
+        cd fonts || return
+        ./install.sh
+        cd .. || return
+        rm -rf fonts
+
+        #      git clone --depth=1 https://github.com/romkatv/nerd-fonts.git
+        #      cd nerd-fonts
+        #      ./build 'Meslo/S/*'
+        #      cd ..
+        #      rm -rf nerd-fonts
+    fi
+    #    # If this user's login shell is already "zsh", do not attempt to switch.
+    #    if [ "$(basename -- "$SHELL")" = "zsh" ]; then
+    #        return
+    #    fi
+}
+
+sync_config() {
+    if [[ ! -s $SYNCFILE ]]; then
+        if [[ -s $HOME/$DOTFILES/syncrc ]]; then
+            SYNCFILE="$HOME/$DOTFILES/syncrc"
+        elif [[ -s $HOME/$DOTFILES/.syncrc ]]; then
+            SYNCFILE="$HOME/$DOTFILES/.syncrc"
+        else
+            echo "File syncrc doesnt exist, exiting"
+            exit 1
+        fi
+    fi
+}
+
+files_list() {
+    SRCFILES="$(sed -n '/\[files\]/,/\[endfiles\]/p' $SYNCFILE | grep -v '^\[.*files]' | grep -v ^#)"
+    if [[ -z "$SRCFILES" ]]; then
+        echo "Specify files to sync in syncrc file"
+        exit 1
+    fi
+    CONFIGDOTFILES=$(grep '^DOTFILES=' $SYNCFILE | awk -F"=" '{print $2}')
+    if [[ ! -z "$CONFIGDOTFILES" ]]; then
+        DOTDIR="$HOME/$CONFIGDOTFILES"
+    else
+        DOTDIR="$HOME/.dotfiles"
+    fi
+}
+
+get_file() {
+    srcfile="$(echo $file | awk -F: '{print $1}')"
+    dstfile="$(echo $file | awk -F: '{print $2}')"
+    dotsrc="$DOTDIR/$srcfile"
+
+    if [[ $dstfile = "" ]]; then
+        dstfile=".$(basename "$srcfile")"
+    fi
+    dotfile="$HOME/$dstfile"
+}
+run_install() {
+    # Run as unattended if stdin is not a tty
+    if [ ! -t 0 ]; then
+        NOTTY=yes
+    else
+        NOTTY=no
+    fi
+
+    while [ $# -gt 0 ]; do
+        case $1 in
+        --unattended) NOTTY=yes ;;
+        --fonts) INSTALL_FONTS=yes ;;
+        -u)
+            gitpull
+            exit 0
+            ;;
+        -U)
+            gitpull
+            ACTION='all'
+            exit 0
+            ;;
+        -c)
+            gitcommit
+            exit 0
+            ;;
+        -p)
+            gitpush
+            exit 0
+            ;;
+        -cp)
+            checkin
+            exit 0
+            ;;
+        esac
+        shift
+    done
+    removebrokenlinks
+    sync_options "$@"
+    sync_config "$@"
+    files_list "$@"
+
+    for file in $SRCFILES; do
+        get_file "$file"
+        SYMLINK_INTERACTIVE "$dotsrc" "$dotfile"
+    done
+    exit 0
+}
+while true; do
+    run_install "$@"
+done
