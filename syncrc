@@ -1,4 +1,6 @@
-## Dotfiles sync
+## DoSync
+DOTFILES=.dotfiles
+
 [files]
 
 zsh/zlogin
