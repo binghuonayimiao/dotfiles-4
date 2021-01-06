@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 
 if [ ! -f 'lib/utilities.sh' ]; then
     git submodule --quiet sync --recursive
@@ -61,10 +61,12 @@ install_fonts() {
 
 main() {
     TITLE "Running auto install"
-    prepare_env
-    run_install
+
+    prepare_env "$@"
+    run_install "$@"
     exit 0
+
 }
 while true; do
-    main
+    main "$@"
 done
