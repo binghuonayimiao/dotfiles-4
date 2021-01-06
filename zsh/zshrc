@@ -75,7 +75,7 @@ zplug "lukechilds/zsh-better-npm-completion", defer:2
 #  ➜ ➜ ➜ LOCAL
 # ============================================================================= #
 zplug "$HOME/$DOTFILES/zsh/plugins", from:local
-zplug "$HOME/$DOTFILES/zsh/themes", use:ss-o.zsh-theme, from:local, as:theme
+zplug "$HOME/$DOTFILES/zsh/themes", from:local, as:theme, use:ss-o.zsh-theme
 # ============================================================================= #
 #  ➜ ➜ ➜ INSTALL ZPLUG & LOAD
 # ============================================================================= #
@@ -91,7 +91,7 @@ zplug load
 [ -f ~/.config/fzf/completion.zsh ] && source ~/.config/fzf/completion.zsh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 # ============================================================================= #
-#  ➜ ➜ ➜ p10k 
+#  ➜ ➜ ➜ p10k
 # ============================================================================= #
 #source ~/.dotfiles/zsh/config/p10k/p10k-lean.zsh
 #source ~/.dotfiles/zsh/config/p10k/p10k-classic.zsh
@@ -99,4 +99,3 @@ zplug load
 #source ~/.dotfiles/zsh/config/p10k/p10k-lean-8colors.zsh
 #source ~/.dotfiles/zsh/config/p10k/p10k-robbyrussell.zsh
 #source ~/.dotfiles/zsh/config/p10k/p10k-robby-by-sall.zsh
-
