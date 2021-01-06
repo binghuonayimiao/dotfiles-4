@@ -8,6 +8,7 @@ if [ ! -f 'lib/utilities.sh' ]; then
     git checkout master
     cd ..
 fi
+DOTFILES_ROOT="$(pwd -P)"
 source "lib/utilities.sh"
 
 sync_rc() {
