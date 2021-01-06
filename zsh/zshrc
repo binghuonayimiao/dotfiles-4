@@ -19,7 +19,7 @@ source "${ZPLUG_HOME}/init.zsh"
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 
 # Oh-My-Zsh core
-zplug "lib/*", from:oh-my-zsh
+zplug "lib/*f", from:oh-my-zsh
 # ============================================================================= #
 #  ➜ ➜ ➜ OH-MY-ZSH
 # ============================================================================= #
@@ -40,12 +40,10 @@ zplug "plugins/gpg-agent", from:oh-my-zsh
 #    from:gist, \
 #    as:command, \
 #    use:progbar
-
-zplug "zsh-users/zsh-autosuggestions"
-zplug "zsh-users/zsh-completions"
-zplug "zdharma/fast-syntax-highlighting"
-zplug "hlissner/zsh-autopair", defer:2
-zplug "lukechilds/zsh-better-npm-completion", defer:2
+# ============================================================================= #
+#  ➜ ➜ ➜ PREZTO
+# ============================================================================= #
+zplug "modules/prompt", from:prezto
 # ============================================================================= #
 #  ➜ ➜ ➜ ZPLUG EXTRAS
 # ============================================================================= #
@@ -55,7 +53,12 @@ zplug "desyncr/auto-ls"
 #zplug "mattberther/zsh-pyenv"
 zplug "wuotr/zsh-plugin-vscode"
 zplug "MichaelAquilina/zsh-you-should-use"
-zplug "unixorn/git-extra-commands" #This plugin will inform the user if some dependencies missing and show instruction for installation.
+zplug "unixorn/git-extra-commands"
+zplug "zsh-users/zsh-completions"
+zplug "zsh-users/zsh-autosuggestions"
+zplug "zdharma/fast-syntax-highlighting" defer:2
+zplug "hlissner/zsh-autopair", defer:2
+zplug "lukechilds/zsh-better-npm-completion", defer:2
 # ============================================================================= #
 #  ➜ ➜ ➜ THEME
 # ============================================================================= #
