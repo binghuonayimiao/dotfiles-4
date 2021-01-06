@@ -1,164 +1,88 @@
-#!/usr/bin/env zsh
-# Standarized $0 handling, following:
-# https://github.com/zdharma/Zsh-100-Commits-Club/blob/master/Zsh-Plugin-Standard.adoc
-0="${${ZERO:-${0:#$ZSH_ARGZERO}}:-${(%):-%N}}"
-0="${${(M)0:#/*}:-$PWD/$0}"
+# Easier alias to use the plugin
+alias ccat="colorize_cat"
+alias cless="colorize_less"
 
-if [[ $PMSPEC != *b* ]] {
-  PATH=$PATH:"${0:h}/bin"
+# '$0:A' gets the absolute path of this file
+ZSH_COLORIZE_PLUGIN_PATH=$0:A
+
+colorize_check_requirements() {
+    local -a available_tools
+    available_tools=("chroma" "pygmentize")
+
+    if [ -z "$ZSH_COLORIZE_TOOL" ]; then
+        if (( $+commands[pygmentize] )); then
+            ZSH_COLORIZE_TOOL="pygmentize"
+        elif (( $+commands[chroma] )); then
+            ZSH_COLORIZE_TOOL="chroma"
+        else
+            echo "Neither 'pygments' nor 'chroma' is installed!" >&2
+            return 1
+        fi
+    fi
+
+    if [[ ${available_tools[(Ie)$ZSH_COLORIZE_TOOL]} -eq 0 ]]; then
+        echo "ZSH_COLORIZE_TOOL '$ZSH_COLORIZE_TOOL' not recognized. Available options are 'pygmentize' and 'chroma'." >&2
+        return 1
+    elif (( $+commands["$ZSH_COLORIZE_TOOL"] )); then
+        echo "Package '$ZSH_COLORIZE_TOOL' is not installed!" >&2
+        return 1
+    fi
 }
 
-DEPENDENCES_ARCH+=( grc )
-DEPENDENCES_DEBIAN+=( grc )
+colorize_cat() {
+    if ! colorize_check_requirements; then
+        return 1
+    fi
 
-export LESS="$LESS -R -M"
+    # If the environment variable ZSH_COLORIZE_STYLE
+    # is set, use that theme instead. Otherwise,
+    # use the default.
+    if [ -z "$ZSH_COLORIZE_STYLE" ]; then
+        # Both pygmentize & chroma support 'emacs'
+        ZSH_COLORIZE_STYLE="emacs"
+    fi
 
-function ip() {
-  command ip --color=auto "$@"
+    # Use stdin if no arguments have been passed.
+    if [ $# -eq 0 ]; then
+        if [[ "$ZSH_COLORIZE_TOOL" == "pygmentize" ]]; then
+            pygmentize -O style="$ZSH_COLORIZE_STYLE" -g
+        else
+            chroma --style="$ZSH_COLORIZE_STYLE" --formatter="${ZSH_COLORIZE_CHROMA_FORMATTER:-terminal}"
+        fi
+        return $?
+    fi
+
+    # Guess lexer from file extension, or guess it from file contents if unsuccessful.
+    local FNAME lexer
+    for FNAME in "$@"; do
+        if [[ "$ZSH_COLORIZE_TOOL" == "pygmentize" ]]; then
+            lexer=$(pygmentize -N "$FNAME")
+            if [[ $lexer != text ]]; then
+                pygmentize -O style="$ZSH_COLORIZE_STYLE" -l "$lexer" "$FNAME"
+            else
+                pygmentize -O style="$ZSH_COLORIZE_STYLE" -g "$FNAME"
+            fi
+        else
+            chroma --style="$ZSH_COLORIZE_STYLE" --formatter="${ZSH_COLORIZE_CHROMA_FORMATTER:-terminal}" "$FNAME"
+        fi
+    done
 }
 
-function grep() {
-  command grep --colour=auto "$@"
-}
+# The less option 'F - Forward forever; like "tail -f".' will not work in this implementation
+# caused by the lack of the ability to follow the file within pygmentize.
+colorize_less() {
+    if ! colorize_check_requirements; then
+        return 1
+    fi
 
-function egrep() {
-  command egrep --colour=auto "$@"
-}
+    _cless() {
+        # LESS="-R $LESS" enables raw ANSI colors, while maintain already set options.
+        local LESS="-R $LESS"
 
-function fgrep() {
-  command fgrep --colour=auto "$@"
-}
-
-if (( $+commands[diff-so-fancy] )); then
-  function diff() {
-    command diff "$@" | diff-so-fancy
-  }
-elif  (( $+commands[delta] )); then
-  function diff() {
-    command diff "$@" | delta
-  }
-else
-  function diff() {
-    command diff --color "$@"
-  }
-fi
-
-if (( $+commands[grc] )); then
-  function env() {
-    command grc --colour=auto env "$@"
-  }
-
-  function lsblk() {
-    command grc --colour=auto lsblk "$@"
-  }
-
-  function df() {
-    command grc --colour=auto df -h "$@"
-  }
-
-  function du() {
-    command grc --colour=auto du -h "$@"
-  }
-
-  function free() {
-    command grc --colour=auto free -h "$@"
-  }
-
-  function as() {
-    command grc --colour=auto as "$@"
-  }
-
-  if (( $+commands[dig] )); then
-    function dig() {
-      command grc --colour=auto dig "$@"
-    }
-  fi
-
-  if (( $+commands[gas] )); then
-    function gas() {
-      command grc --colour=auto gas "$@"
-    }
-  fi
-
-  if (( $+commands[gcc] )); then
-    function gcc() {
-      command grc --colour=auto gcc "$@"
-    }
-  fi
-
-  if (( $+commands[g++] )); then
-    function g() ++(){
-      command grc --colour=auto g++ "$@"
-    }
-  fi
-
-  if (( $+commands[last] )); then
-    function last() {
-      command grc --colour=auto last "$@"
-    }
-  fi
-
-  if (( $+commands[ld] )); then
-    function ld() {
-      command grc --colour=auto ld "$@"
-    }
-  fi
-
-  if (( $+commands[ifconfig] )); then
-    function ifconfig() {
-      command grc --colour=auto ifconfig "$@"
-    }
-  fi
-
-  if (( $+commands[mount] )); then
-    function mount() {
-      command grc --colour=auto mount "$@"
-    }
-  fi
-
-  if (( $+commands[mtr] )); then
-    function mtr() {
-      command grc --colour=auto mtr "$@"
-    }
-  fi
-
-  if (( $+commands[netstat] )); then
-    function netstat() {
-      command grc --colour=auto netstat "$@"
-    }
-  fi
-
-  if (( $+commands[nmap] )); then
-    function nmap() {
-      command grc --colour=auto nmap "$@"
-    }
-  fi
-
-  if (( $+commands[ping] )); then
-    function ping() {
-      command grc --colour=auto ping "$@"
-    }
-  fi
-
-  if (( $+commands[ping6] )); then
-    function ping6() {
-      command grc --colour=auto ping6 "$@"
-    }
-  fi
-
-  if (( $+commands[ps] )); then
-    function ps() {
-      command grc --colour=auto ps "$@"
-    }
-  fi
-
-  if (( $+commands[traceroute] )); then
-    function traceroute() {
-      command grc --colour=auto traceroute "$@"
-    }
-  fi
-fi
-iles the tty of the preprocessor will be supended.
+        # This variable tells less to pipe every file through the specified command
+        # (see the man page of less INPUT PREPROCESSOR).
+        # 'zsh -ic "colorize_cat %s 2> /dev/null"' would not work for huge files like
+        # the ~/.zsh_history. For such files the tty of the preprocessor will be supended.
         # Therefore we must source this file to make colorize_cat available in the
         # preprocessor without the interactive mode.
         # `2>/dev/null` will suppress the error for large files 'broken pipe' of the python
