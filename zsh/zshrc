@@ -61,12 +61,12 @@ zplug "unixorn/git-extra-commands" #This plugin will inform the user if some dep
 # ============================================================================= #
 #zplug romkatv/powerlevel10k, as:theme, depth:1
 #zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
-zplug "themes/robbyrussell", from:oh-my-zsh, as:theme
+#zplug "themes/robbyrussell", from:oh-my-zsh, as:theme
 # ============================================================================= #
 #  ➜ ➜ ➜ LOCAL
 # ============================================================================= #
 zplug "$HOME/$DOTFILES/zsh/plugins", from:local
-#zplug "$HOME/$DOTFILES/zsh/themes", use:, from:local, as:theme
+zplug "$HOME/$DOTFILES/zsh/themes", use:robby-by-sall.zsh-theme, from:local, as:theme
 # ============================================================================= #
 #  ➜ ➜ ➜ INSTALL ZPLUG & LOAD
 # ============================================================================= #
