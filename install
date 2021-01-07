@@ -7,7 +7,6 @@ trap 'exit' SIGINT SIGQUIT SIGTSTP
 update_repo() {
     DOTDIR="$HOME/.dotfiles"
     REPO="https://github.com/ss-o/dotfiles"
-
     if [ -d "$DOTDIR/.git" ]; then
         cd "$DOTDIR"
         git pull --quiet --rebase origin main || exit 1
@@ -25,10 +24,23 @@ update_repo() {
     cd .. || return
 }
 
+collect_info() {
+    [ -n "$(echo $BASH)" ] && usingbash='yes' || usingbash='no'
+    if [ $usingbash = yes ]; then
+        echo "Using bash"
+    fi
+    [ -n "$(echo $ZSH)" ] && usingzsh='yes' || usingzsh='no'
+    if [ $usingzsh = yes ]; then
+        echo "Using zsh"
+    fi
+
+}
+
 prepare_env() {
     source "lib/utilities.sh"
 
     TITLE "Device:"
+    collect_info
     CUTLINE
     BOLDBLUE "$DISTRO | $UARCH | $UKERNEL"
     CUTLINE
