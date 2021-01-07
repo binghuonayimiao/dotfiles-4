@@ -56,9 +56,9 @@ zplug "plugins/gpg-agent", from:oh-my-zsh
 # ============================================================================= #
 #  ➜ ➜ ➜ ZPLUG EXTRAS
 # ============================================================================= #
-#zplug "wuotr/zsh-plugin-vscode"
-#zplug "zsh-users/zsh-completions"
-#zplug "zsh-users/zsh-autosuggestions"
+zplug "wuotr/zsh-plugin-vscode"
+zplug "zsh-users/zsh-completions"
+zplug "zsh-users/zsh-autosuggestions"
 #zplug "zpm-zsh/ls" # ls alias (ls colors)
 #zplug "desyncr/auto-ls"
 #zplug "lukechilds/zsh-nvm"
