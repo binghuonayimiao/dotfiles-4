@@ -17,9 +17,8 @@ prepare_env() {
     source "lib/utilities.sh"
     TITLE "Device:"
     CUTLINE
-    BOLDBLUE "$DISTRO"
-    BOLDBLUE "$UARCH"
-    BOLDBLUE "$UKERNEL"
+    BOLDWHITE "DDMMYY | HHMMSS"
+    BOLDBLUE "$DISTRO | $UARCH | UKERNEL"
     CUTLINE
 
 }
