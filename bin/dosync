@@ -118,7 +118,7 @@ sync_options() {
         deps=(curl wget ruby python chroma)
         UPDATE || return
         PREDEPS "$deps"
-
+        exit 0
     fi
     #    # If this user's login shell is already "zsh", do not attempt to switch.
     #    if [ "$(basename -- "$SHELL")" = "zsh" ]; then
