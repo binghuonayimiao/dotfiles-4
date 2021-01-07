@@ -3,7 +3,7 @@ DOTFILES=.dotfiles
 
 [files]
 
-task
+task/task
 task/taskrc
 
 git/gitconfig
