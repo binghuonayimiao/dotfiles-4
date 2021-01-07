@@ -26,7 +26,6 @@
     # Right prompt segments.
     typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
     # =========================[ Line #1 ]=========================
-    status                  # exit code of the last command
     os_icon                 # os identifier
     command_execution_time  # duration of the last command
     background_jobs         # presence of background jobs
@@ -80,6 +79,7 @@
     timewarrior             # timewarrior tracking status (https://timewarrior.net/)
     taskwarrior             # taskwarrior task count (https://taskwarrior.org/)
     # time                  # current time
+    status                  # exit code of the last command
     # =========================[ Line #2 ]=========================
     # newline                 # \n
     # ip                      # ip address and bandwidth usage for a specified network interface
@@ -124,17 +124,17 @@
   # fi
 
   # Separator between same-color segments on the left.
-  typeset -g POWERLEVEL9K_LEFT_SUBSEGMENT_SEPARATOR='\u'
+  #typeset -g POWERLEVEL9K_LEFT_SUBSEGMENT_SEPARATOR='\u'
   # Separator between same-color segments on the right.
-  typeset -g POWERLEVEL9K_RIGHT_SUBSEGMENT_SEPARATOR='\u'
+  #typeset -g POWERLEVEL9K_RIGHT_SUBSEGMENT_SEPARATOR='\u'
   # Separator between different-color segments on the left.
   # typeset -g POWERLEVEL9K_LEFT_SEGMENT_SEPARATOR='\uE0B0'
   # Separator between different-color segments on the right.
   # typeset -g POWERLEVEL9K_RIGHT_SEGMENT_SEPARATOR='\uE0B2'
   # The right end of left prompt.
-  typeset -g POWERLEVEL9K_LEFT_PROMPT_LAST_SEGMENT_END_SYMBOL='\u'
+  #typeset -g POWERLEVEL9K_LEFT_PROMPT_LAST_SEGMENT_END_SYMBOL='\u'
   # The left end of right prompt.
-  typeset -g POWERLEVEL9K_RIGHT_PROMPT_FIRST_SEGMENT_START_SYMBOL='\u'
+  #typeset -g POWERLEVEL9K_RIGHT_PROMPT_FIRST_SEGMENT_START_SYMBOL='\u'
   # The left end of left prompt.
   # typeset -g POWERLEVEL9K_LEFT_PROMPT_FIRST_SEGMENT_START_SYMBOL=
   # The right end of right prompt.
