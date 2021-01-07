@@ -15,17 +15,25 @@ update_repo() {
 
 prepare_env() {
     source "lib/utilities.sh"
+    source "lib/installer.sh"
+    TITLE "Device:"
+    CUTLINE
+    BOLDBLUE "$DISTRO"
+    BOLDBLUE "$UARCH"
+    BOLDBLUE "$UKERNEL"
+    CUTLINE
+
 }
 
 main() {
-
     update_repo
     prepare_env
 
     TITLE "Running auto install"
+    CUTLINE
     ./bin/dosync
-
-    exec "$SHELL"
+    CUTLINE
+    exec "zsh"
     exit 0
 
 }

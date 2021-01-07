@@ -1,5 +1,3 @@
-
-
 function branch_prompt_info() {
   # Defines path as current directory
   local current_dir=$PWD

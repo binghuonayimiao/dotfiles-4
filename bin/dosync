@@ -17,9 +17,9 @@ ACTION=""
 INSTALL_FONTS="${INSTALL_FONTS:-no}"
 # ============================================================================= #
 removebrokenlinks() {
-    #  if [[ "$VERBOSE" == True ]]; then
-    #    echo "*** Removing broken symlinks from $HOME ***"
-    #  fi
+    if [[ "$VERBOSE" == True ]]; then
+        echo "*** Removing broken symlinks from $HOME ***"
+    fi
     find $HOME -maxdepth 1 -name ".*" -type l | while read f; do if [ ! -e "$f" ]; then rm -f "$f"; fi; done
 }
 
@@ -195,7 +195,7 @@ run_install() {
 
     for file in $SRCFILES; do
         get_file "$file"
-        SYMLINK_INTERACTIVE "$dotsrc" "$dotfile"
+        SYMLINK "$dotsrc" "$dotfile"
     done
     exit 0
 }
