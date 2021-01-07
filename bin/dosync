@@ -103,11 +103,14 @@ sync_options() {
         ./install.sh
         cd .. || return
         rm -rf fonts
+        exit 0
     fi
     if [ $INSTALL_NERD = yes ]; then
 
         mkdir -p ~/.local/share/fonts
-        cd ~/.local/share/fonts && curl -fLo "Droid Sans Mono for Powerline Nerd Font Complete.otf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/DroidSansMono/complete/Droid%20Sans%20Mono%20Nerd%20Font%20Complete.otf
+        cd ~/.local/share/fonts
+        curl -fLo "Droid Sans Mono for Powerline Nerd Font Complete.otf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/DroidSansMono/complete/Droid%20Sans%20Mono%20Nerd%20Font%20Complete.otf
+        exit 0
         #      git clone --depth=1 https://github.com/romkatv/nerd-fonts.git
         #      cd nerd-fonts
         #      ./build 'Meslo/S/*'
