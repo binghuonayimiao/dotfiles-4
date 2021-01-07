@@ -1,9 +1,9 @@
 # ============================================================================= #
 #  ➜ ➜ ➜ ZSH
 # ============================================================================= #
-#if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-#  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-#fi
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
 for load in $HOME/.dotfiles/zsh/config/*.zsh; do
     if [ -r $load ]; then
         source $load
@@ -70,14 +70,14 @@ zplug "lukechilds/zsh-better-npm-completion", defer:2
 # ============================================================================= #
 #  ➜ ➜ ➜ THEME
 # ============================================================================= #
-#zplug "romkatv/powerlevel10k", as:theme, depth:1
+zplug "romkatv/powerlevel10k", as:theme, depth:1
 #zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
 #zplug "themes/robbyrussell", from:oh-my-zsh, as:theme
 # ============================================================================= #
 #  ➜ ➜ ➜ LOCAL
 # ============================================================================= #
 zplug "$HOME/$DOTFILES/zsh/plugins", from:local
-zplug "$HOME/$DOTFILES/zsh/themes", from:local, as:theme, use:ss-o.zsh-theme
+#zplug "$HOME/$DOTFILES/zsh/themes", from:local, as:theme, use:ss-o.zsh-theme
 # ============================================================================= #
 #  ➜ ➜ ➜ INSTALL ZPLUG & LOAD
 # ============================================================================= #
@@ -100,4 +100,4 @@ zplug load
 #source ~/.dotfiles/zsh/config/p10k/p10k-rainbow.zsh
 #source ~/.dotfiles/zsh/config/p10k/p10k-lean-8colors.zsh
 #source ~/.dotfiles/zsh/config/p10k/p10k-robbyrussell.zsh
-#source ~/.dotfiles/zsh/config/p10k/p10k-robby-by-sall.zsh
+source ~/.dotfiles/zsh/config/p10k/p10k-robby-by-sall.zsh
