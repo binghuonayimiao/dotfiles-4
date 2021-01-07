@@ -68,16 +68,16 @@ zplug "zdharma/fast-syntax-highlighting", defer:2
 zplug "hlissner/zsh-autopair", defer:2
 zplug "lukechilds/zsh-better-npm-completion", defer:2
 # ============================================================================= #
-#  ➜ ➜ ➜ THEME
+#  ➜ ➜ ➜ PROFILES
 # ============================================================================= #
-zplug "romkatv/powerlevel10k", as:theme, depth:1
-#zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
-#zplug "themes/robbyrussell", from:oh-my-zsh, as:theme
+source "$HOME/$DOTFILES/zsh/config/profile/10k.profile.zsh"
+#source "$HOME/$DOTFILES/zsh/config/profile/spaceship.profile.zsh"
+#source "$HOME/$DOTFILES/zsh/config/profile/ohmyzsh.profile.zsh"
+#source "$HOME/$DOTFILES/zsh/config/profile/local.profile.zsh"
 # ============================================================================= #
 #  ➜ ➜ ➜ LOCAL
 # ============================================================================= #
 zplug "$HOME/$DOTFILES/zsh/plugins", from:local
-#zplug "$HOME/$DOTFILES/zsh/themes", from:local, as:theme, use:ss-o.zsh-theme
 # ============================================================================= #
 #  ➜ ➜ ➜ INSTALL ZPLUG & LOAD
 # ============================================================================= #
@@ -86,18 +86,11 @@ if ! zplug check --verbose; then
 fi
 zplug load
 # ============================================================================= #
-#  ➜ ➜ ➜ EXTRAS
+#  ➜ ➜ ➜ LOCAL CONFIGS
 # ============================================================================= #
 [ -f ~/.localrc ] && source ~/.localrc ## Load local environment variables
 [ -f ~/.config/fzf/key-bindings.zsh ] && source ~/.config/fzf/key-bindings.zsh
 [ -f ~/.config/fzf/completion.zsh ] && source ~/.config/fzf/completion.zsh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-# ============================================================================= #
-#  ➜ ➜ ➜ p10k
-# ============================================================================= #
-#source ~/.dotfiles/zsh/config/p10k/p10k-lean.zsh
-#source ~/.dotfiles/zsh/config/p10k/p10k-classic.zsh
-#source ~/.dotfiles/zsh/config/p10k/p10k-rainbow.zsh
-#source ~/.dotfiles/zsh/config/p10k/p10k-lean-8colors.zsh
-#source ~/.dotfiles/zsh/config/p10k/p10k-robbyrussell.zsh
-source ~/.dotfiles/zsh/config/p10k/p10k-robby-by-sall.zsh
+
+
