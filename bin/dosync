@@ -47,8 +47,9 @@ getgitorigin() {
 }
 
 checkin() {
-    git add .
+    cd "$HOME/$DOTFILES"
     gitcommit && gitpush
+    cd
 }
 
 gitpull() {
