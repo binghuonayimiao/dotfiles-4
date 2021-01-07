@@ -15,7 +15,6 @@ update_repo() {
 
 prepare_env() {
     source "lib/utilities.sh"
-    source "lib/installer.sh"
     TITLE "Device:"
     CUTLINE
     BOLDBLUE "$DISTRO"

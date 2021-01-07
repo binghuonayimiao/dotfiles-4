@@ -7,6 +7,7 @@ if [[ -z "$DOTFILES" ]]; then
     DOTFILES=".dotfiles"
 fi
 source "$HOME/$DOTFILES/lib/utilities.sh"
+source "$HOME/$DOTFILES/lib/installer.sh"
 
 NEVER_ROOT
 # ============================================================================= #
@@ -15,6 +16,8 @@ GITOPT="-q"
 GITSUB="--quiet"
 ACTION=""
 INSTALL_FONTS="${INSTALL_FONTS:-no}"
+INSTALL_DEPS="${INSTALL_DEPS:-no}"
+INSTALL_NERD="${INSTALL_NERD:-no}"
 # ============================================================================= #
 removebrokenlinks() {
     if [[ "$VERBOSE" == True ]]; then
@@ -102,12 +105,22 @@ sync_options() {
         ./install.sh
         cd .. || return
         rm -rf fonts
+    fi
+    if [ $INSTALL_NERD = yes ]; then
 
+        mkdir -p ~/.local/share/fonts
+        cd ~/.local/share/fonts && curl -fLo "Droid Sans Mono for Powerline Nerd Font Complete.otf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/DroidSansMono/complete/Droid%20Sans%20Mono%20Nerd%20Font%20Complete.otf
         #      git clone --depth=1 https://github.com/romkatv/nerd-fonts.git
         #      cd nerd-fonts
         #      ./build 'Meslo/S/*'
         #      cd ..
         #      rm -rf nerd-fonts
+    fi
+    if [ $INSTALL_DEPS = yes ]; then
+        deps=(curl wget ruby python chroma)
+        UPDATE || return
+        PREDEPS "$deps"
+
     fi
     #    # If this user's login shell is already "zsh", do not attempt to switch.
     #    if [ "$(basename -- "$SHELL")" = "zsh" ]; then
@@ -162,8 +175,10 @@ run_install() {
 
     while [ $# -gt 0 ]; do
         case $1 in
-        --unattended) NOTTY=yes ;;
-        --fonts) INSTALL_FONTS=yes ;;
+        -unattended) NOTTY=yes ;;
+        -fonts) INSTALL_FONTS=yes ;;
+        -nerd-complete) INSTALL_NERD=yes ;;
+        -deps) INSTALL_DEPS=yes ;;
         -u)
             gitpull
             exit 0
