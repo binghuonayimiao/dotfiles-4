@@ -70,7 +70,7 @@ zplug "lukechilds/zsh-better-npm-completion", defer:2
 # ============================================================================= #
 #  ➜ ➜ ➜ PROFILES
 # ============================================================================= #
-source "$HOME/$DOTFILES/zsh/config/profile/10k.profile.zsh"
+source "$HOME/$DOTFILES/zsh/config/profile/p10k.profile.zsh"
 #source "$HOME/$DOTFILES/zsh/config/profile/spaceship.profile.zsh"
 #source "$HOME/$DOTFILES/zsh/config/profile/ohmyzsh.profile.zsh"
 #source "$HOME/$DOTFILES/zsh/config/profile/local.profile.zsh"
