@@ -1,10 +1,10 @@
 prompt() {
-    if [ ! -z "${GITHUB_USER}" ]; then
-        local USERNAME="@ss-o"
+        if [ ! -z "${GITHUB_USER}" ]; then
+        local USERNAME="@${GITHUB_USER}"
     else
         local USERNAME="%n"
     fi
-    PROMPT="%{$fg_bold[white]%}${USERNAME}%(?:%{$reset_color%}➜ :%{$fg_bold[red]%}➜ )"
+    PROMPT="%{$fg_bold[white]%}${USERNAME} %(?:%{$reset_color%}➜ :%{$fg_bold[red]%}➜ )"
     PROMPT+='%{$fg_bold[blue]%}%~%{$reset_color%} $(git_prompt_info)%{$fg[white]%} %{$reset_color%}'
 }
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[cyan]%}(%{$fg_bold[red]%}"
