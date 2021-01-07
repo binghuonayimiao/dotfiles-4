@@ -5,6 +5,18 @@
 trap 'exit' SIGINT SIGQUIT SIGTSTP
 
 update_repo() {
+    DOTDIR="$HOME/.dotfiles"
+    REPO="https://github.com/ss-o/dotfiles"
+
+    if [ -d "$DOTDIR/.git" ]; then
+        cd "$DOTDIR"
+        git pull --quiet --rebase origin main || exit 1
+    else
+        rm -rf "$DOTDIR"
+        git clone --quiet --depth=1 "$REPO" "$DOTDIR"
+    fi
+    cd "$DOTDIR"
+
     git submodule --quiet sync --recursive
     git submodule --quiet update --init --recursive
 
@@ -15,9 +27,9 @@ update_repo() {
 
 prepare_env() {
     source "lib/utilities.sh"
+
     TITLE "Device:"
     CUTLINE
-
     BOLDBLUE "$DISTRO | $UARCH | $UKERNEL"
     CUTLINE
 

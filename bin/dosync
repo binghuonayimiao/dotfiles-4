@@ -3,6 +3,7 @@
 #  ➜ ➜ ➜ TRAP
 # ============================================================================= #
 trap 'exit' SIGINT SIGQUIT SIGTSTP
+
 if [[ -z "$DOTFILES" ]]; then
     DOTFILES=".dotfiles"
 fi
@@ -19,6 +20,19 @@ INSTALL_FONTS="${INSTALL_FONTS:-no}"
 INSTALL_DEPS="${INSTALL_DEPS:-no}"
 INSTALL_NERD="${INSTALL_NERD:-no}"
 # ============================================================================= #
+vscodesettings() {
+    if [ "$(uname -s)" = "Darwin" ]; then
+        vscodepath="$HOME/Library/Application Support/Code/User"
+        vscodeplatform=mac
+    else
+        vscodepath="$HOME/.config/Code/User"
+        vscodeplatform=linux
+    fi
+    mkdir -p "$vscodepath"
+    SYMLINK ".vscode-$vscodeplatform.settings.json" "$vscodepath/settings.json"
+    SYMLINK ".vscode-$vscodeplatform.keybindings.json" "$vscodepath/keybindings.json"
+}
+
 removebrokenlinks() {
     find $HOME -maxdepth 1 -name ".*" -type l | while read f; do if [ ! -e "$f" ]; then rm -f "$f"; fi; done
 }
@@ -207,6 +221,7 @@ run_install() {
         esac
         shift
     done
+
     removebrokenlinks
     sync_options "$@"
     sync_config "$@"
