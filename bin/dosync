@@ -17,11 +17,6 @@ NOTTY="${NOTTY:-no}"
 if [ ! -z "$TERM" ]; then
     export TERM="xterm-256color"
 fi
-isdotfilesdir() {
-    if [ ! -d "$HOME/$DOTFILES/.git" ]; then
-        git clone --quiet --depth=1 "$ORIGIN" "$HOME/$DOTFILES"
-    fi
-}
 
 isgitlayout() {
     if [[ ! -d .git ]]; then
