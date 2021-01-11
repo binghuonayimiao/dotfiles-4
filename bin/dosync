@@ -13,6 +13,8 @@ source "$HOME/$DOTFILES/lib/installer.sh"
 NEVER_ROOT
 # ============================================================================= #
 SYNCFILE="$HOME/$DOTFILES/syncrc"
+DOTDIR="$HOME/.dotfiles"
+REPO="https://github.com/ss-o/dotfiles"
 GITOPT="-q"
 GITSUB="--quiet"
 ACTION=""
@@ -20,6 +22,17 @@ INSTALL_FONTS="${INSTALL_FONTS:-no}"
 INSTALL_DEPS="${INSTALL_DEPS:-no}"
 INSTALL_NERD="${INSTALL_NERD:-no}"
 # ============================================================================= #
+dotfiles_dir() {
+    if [ -d "$DOTDIR/.git" ]; then
+        cd "$DOTDIR"
+        git pull --quiet --rebase origin main || exit 1
+    else
+        rm -rf "$DOTDIR"
+        git clone --quiet --depth=1 "$REPO" "$DOTDIR"
+    fi
+    cd "$DOTDIR"
+}
+
 vscodesettings() {
     if [ "$(uname -s)" = "Darwin" ]; then
         vscodepath="$HOME/Library/Application Support/Code/User"
@@ -223,10 +236,10 @@ run_install() {
     done
 
     removebrokenlinks
+    dotfiles_dir "$@"
     sync_options "$@"
     sync_config "$@"
     files_list "$@"
-
     for file in $SRCFILES; do
         get_file "$file"
         SYMLINK "$dotsrc" "$dotfile"
