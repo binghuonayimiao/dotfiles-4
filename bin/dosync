@@ -120,7 +120,8 @@ sync_options() {
         exit 0
     fi
     if [ $HELP = yes ]; then
-        echo "DoSync usage:"
+        echo "Usage:"
+        exit 0
     fi
 }
 installer_config() {
