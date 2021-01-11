@@ -4,7 +4,7 @@
 # ============================================================================= #
 trap 'exit' SIGINT SIGQUIT SIGTSTP
 
-DOSYNCV="0.1"
+#DOSYNCV="0.1"
 DOTFILES=".dotfiles"
 SYNCFILE="$HOME/$DOTFILES/syncrc"
 GITOPT="-q"
@@ -77,6 +77,12 @@ gitpush() {
     cd
 }
 
+if [ -d "$HOME/$DOTFILES" ]; then
+    cd "$HOME/$DOTFILES" || exit 1
+    gitpull
+else
+    git clone $GITOPT "$ORIGIN" "$HOME/$DOTFILES"
+fi
 source "$HOME/$DOTFILES/lib/utilities.sh"
 source "$HOME/$DOTFILES/lib/installer.sh"
 
