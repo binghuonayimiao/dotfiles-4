@@ -19,8 +19,8 @@ export NVM_AUTO_USE=true
 # export ARCHFLAGS="-arch x86_64"
 
 # Default SSH and GPG
-export SSH_KEY_PATH="$HOME/.ssh/id_rsa"
-export GPG_TTY=$(tty)
+#export SSH_KEY_PATH="$HOME/.ssh/id_rsa"
+#export GPG_TTY=$(tty)
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
