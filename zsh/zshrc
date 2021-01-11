@@ -76,10 +76,10 @@ zplug "$HOME/$DOTFILES/zsh/plugins", from:local
 # ============================================================================= #
 #  ➜ ➜ ➜ PROFILES
 # ============================================================================= #
-#zplug "romkatv/powerlevel10k", as:theme, depth:1
+zplug "romkatv/powerlevel10k", as:theme, depth:1
 #zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
 #zplug "themes/robbyrussell", from:oh-my-zsh, as:theme
-zplug "$HOME/$DOTFILES/zsh/themes", from:local, as:theme, use:ss-o.zsh-theme
+#zplug "$HOME/$DOTFILES/zsh/themes", from:local, as:theme, use:ss-o.zsh-theme
 # ============================================================================= #
 #  ➜ ➜ ➜ INSTALL ZPLUG & LOAD
 # ============================================================================= #
@@ -99,4 +99,4 @@ zplug load
 #source ~/.dotfiles/zsh/config/p10k/p10k-rainbow.zsh
 #source ~/.dotfiles/zsh/config/p10k/p10k-lean-8colors.zsh
 #source ~/.dotfiles/zsh/config/p10k/p10k-robbyrussell.zsh
-#source ~/.dotfiles/zsh/config/p10k/p10k-robby-by-sall.zsh
+source ~/.dotfiles/zsh/config/p10k/p10k-robby-by-sall.zsh
