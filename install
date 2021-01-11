@@ -33,7 +33,7 @@ main() {
 
     TITLE "Running auto install"
     CUTLINE
-    ./bin/dosync
+    ./bin/dosync -unattended
     CUTLINE
     exec "zsh"
     exit 0
