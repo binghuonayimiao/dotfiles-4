@@ -82,20 +82,6 @@ NEVER_ROOT
 # ============================================================================= #
 
 # ============================================================================= #
-
-vscodesettings() {
-    if [ "$(uname -s)" = "Darwin" ]; then
-        vscodepath="$HOME/Library/Application Support/Code/User"
-        vscodeplatform=mac
-    else
-        vscodepath="$HOME/.config/Code/User"
-        vscodeplatform=linux
-    fi
-    mkdir -p "$vscodepath"
-    SYMLINK ".vscode-$vscodeplatform.settings.json" "$vscodepath/settings.json"
-    SYMLINK ".vscode-$vscodeplatform.keybindings.json" "$vscodepath/keybindings.json"
-}
-
 removebrokenlinks() {
     find $HOME -maxdepth 1 -name ".*" -type l | while read f; do if [ ! -e "$f" ]; then rm -f "$f"; fi; done
 }
@@ -123,18 +109,15 @@ sync_options() {
     if [ $INSTALL_NERD = yes ]; then
 
         NOTIFY "Installing fonts"
-        mkdir -p ~/.local/share/NerdFonts
+        mkdir -p ~/.local/share/fonts
         cd ~/.local/share/fonts
         git clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git && cd nerd-fonts
         #wget https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/install.sh &&
         chmod +x install.sh && ./install.sh
         exit 0
-        #      git clone --depth=1 https://github.com/romkatv/nerd-fonts.git
-        #      cd nerd-fonts
-        #      ./build 'Meslo/S/*'
-        #      cd ..
-        #      rm -rf nerd-fonts
     fi
+}
+installer_config() {
     if [ $INSTALL_DEPS = yes ]; then
         case $OS in
         'Arch')
@@ -207,19 +190,19 @@ run_install() {
         -powerline-fonts) INSTALL_FONTS=yes ;;
         -nerd-complete) INSTALL_NERD=yes ;;
         -deps) INSTALL_DEPS=yes ;;
-        -u)
+        -u | --pull)
             gitpull
             exit 0
             ;;
-        -c)
+        -c | --commit)
             gitcommit
             exit 0
             ;;
-        -p)
+        -p | --push)
             gitpush
             exit 0
             ;;
-        -cp)
+        -cc | --check)
             checkin
             exit 0
             ;;
@@ -229,8 +212,10 @@ run_install() {
 
     removebrokenlinks
     sync_options "$@"
+    installer_config "$@"
     sync_config "$@"
     files_list "$@"
+
     for file in $SRCFILES; do
         get_file "$file"
         SYMLINK "$dotsrc" "$dotfile"
