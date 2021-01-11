@@ -19,7 +19,7 @@ RUN echo LANG=en_GB.UTF-8 > /etc/locale.conf
 RUN useradd -m -r -G wheel -s /bin/bash ${USERNAME}
 RUN echo "root:${PASSWORD}" | chpasswd
 RUN echo "${USERNAME}:${PASSWORD}" | chpasswd
-RUN echo "%wheel ALL=(ALL) NOPASSWD: ALL | EDITOR='tee -a' visudo"
+RUN echo "%wheel ALL=(ALL) NOPASSWD: ALL" | EDITOR='tee -a' visudo
 
 ENV HOME /home/${USERNAME}
 WORKDIR /home/${USERNAME}
