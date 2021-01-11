@@ -110,8 +110,6 @@ gitpull() {
 gitcommit() {
     getgitorigin
     cd "$HOME/$DOTFILES"
-    git add .
-    git commit -m "Update"
     echo "Commiting latest changes to the repository"
     git commit -a $GITOPT
     cd
