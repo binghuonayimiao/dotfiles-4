@@ -17,10 +17,11 @@ NOTTY="${NOTTY:-no}"
 if [ ! -z "$TERM" ]; then
     export TERM="xterm-256color"
 fi
-
-if [ ! -d "$HOME/$DOTFILES" ]; then
-    git clone --quiet --depth=1 "$ORIGIN" "$HOME/$DOTFILES"
-fi
+isdotfilesdir() {
+    if [ ! -d "$HOME/$DOTFILES" ]; then
+        git clone --quiet --depth=1 "$ORIGIN" "$HOME/$DOTFILES"
+    fi
+}
 
 isgitlayout() {
     if [[ ! -d .git ]]; then
@@ -80,6 +81,7 @@ gitpush() {
 }
 
 if [ ! -f "$HOME/$DOTFILES/lib/utilities.sh" ]; then
+    isdotfilesdir
     cd "$HOME/$DOTFILES"
     getgitorigin
     echo "Pulling latest changes from $ORIGIN"
