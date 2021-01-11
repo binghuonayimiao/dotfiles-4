@@ -22,7 +22,8 @@ if [ -d "$DOTDIR/.git" ]; then
     cd "$DOTDIR"
     git pull --quiet --rebase origin main || exit 1
 else
-    rm -rf "$DOTDIR" "$CURRENDIR"
+    rm -rf "$DOTDIR"
+    rm -rf "$CURRENDIR"
     git clone --quiet --depth=1 "$REPO" "$DOTDIR"
 fi
 
