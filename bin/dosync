@@ -4,25 +4,10 @@
 # ============================================================================= #
 trap 'exit' SIGINT SIGQUIT SIGTSTP
 
-if [[ -z "$DOTFILES" ]]; then
-    DOTFILES=".dotfiles"
-fi
-source "$HOME/$DOTFILES/lib/utilities.sh"
-source "$HOME/$DOTFILES/lib/installer.sh"
-
-NEVER_ROOT
-# ============================================================================= #
-SYNCFILE="$HOME/$DOTFILES/syncrc"
-DOTDIR="$HOME/.dotfiles"
-REPO="https://github.com/ss-o/dotfiles"
-GITOPT="-q"
-GITSUB="--quiet"
-ACTION=""
-INSTALL_FONTS="${INSTALL_FONTS:-no}"
-INSTALL_DEPS="${INSTALL_DEPS:-no}"
-INSTALL_NERD="${INSTALL_NERD:-no}"
-# ============================================================================= #
 dotfiles_dir() {
+    DOTDIR="$HOME/.dotfiles"
+    REPO="https://github.com/ss-o/dotfiles"
+
     if [ -d "$DOTDIR/.git" ]; then
         cd "$DOTDIR"
         git pull --quiet --rebase origin main || exit 1
@@ -30,8 +15,27 @@ dotfiles_dir() {
         rm -rf "$DOTDIR"
         git clone --quiet --depth=1 "$REPO" "$DOTDIR"
     fi
-    cd "$DOTDIR"
 }
+
+if [[ -z "$DOTFILES" ]]; then
+    DOTFILES=".dotfiles"
+fi
+if [ ! -f "$HOME/$DOTFILES/lib/utilities.sh" ]; then
+    dotfiles_dir
+fi
+source "$HOME/$DOTFILES/lib/utilities.sh"
+source "$HOME/$DOTFILES/lib/installer.sh"
+
+NEVER_ROOT
+# ============================================================================= #
+SYNCFILE="$HOME/$DOTFILES/syncrc"
+GITOPT="-q"
+GITSUB="--quiet"
+ACTION=""
+INSTALL_FONTS="${INSTALL_FONTS:-no}"
+INSTALL_DEPS="${INSTALL_DEPS:-no}"
+INSTALL_NERD="${INSTALL_NERD:-no}"
+# ============================================================================= #
 
 vscodesettings() {
     if [ "$(uname -s)" = "Darwin" ]; then
@@ -205,7 +209,7 @@ run_install() {
     while [ $# -gt 0 ]; do
         case $1 in
         -unattended) NOTTY=yes ;;
-        -fonts) INSTALL_FONTS=yes ;;
+        -powerline-fonts) INSTALL_FONTS=yes ;;
         -nerd-complete) INSTALL_NERD=yes ;;
         -deps) INSTALL_DEPS=yes ;;
         -u)
@@ -234,7 +238,6 @@ run_install() {
     done
 
     removebrokenlinks
-    dotfiles_dir "$@"
     sync_options "$@"
     sync_config "$@"
     files_list "$@"
