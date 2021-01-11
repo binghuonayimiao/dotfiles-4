@@ -9,7 +9,7 @@ REPO="https://github.com/ss-o/dotfiles"
 SYNCFILE="$HOME/$DOTFILES/syncrc"
 GITOPT="-q"
 GITSUB="--quiet"
-ACTION=""
+GITSUBOPT="--quiet"
 INSTALL_FONTS="${INSTALL_FONTS:-no}"
 INSTALL_DEPS="${INSTALL_DEPS:-no}"
 INSTALL_NERD="${INSTALL_NERD:-no}"
@@ -96,14 +96,11 @@ gitpull() {
     isgitlayout
     echo "Pulling latest changes from $ORIGIN"
     git pull $GITOPT
-    if [[ "$ACTION" = "all" ]]; then
-        cd "$HOME/$DOTFILES"
-        echo "Pulling latest changes for submodules"
-        # Required if a submodule origin changed
-        git submodule $GITSUBOPT sync
-        git submodule $GITSUBOPT foreach --recursive git fetch
-        git submodule $GITSUBOPT update --init --recursive
-    fi
+    echo "Pulling latest changes for submodules"
+    # Required if a submodule origin changed
+    git submodule $GITSUBOPT sync
+    git submodule $GITSUBOPT foreach --recursive git fetch
+    git submodule $GITSUBOPT update --init --recursive
     cd
 }
 
@@ -244,7 +241,6 @@ run_install() {
             ;;
         -U)
             gitpull
-            ACTION='all'
             exit 0
             ;;
         -c)
