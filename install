@@ -19,9 +19,6 @@ update_repo() {
     git submodule --quiet sync --recursive
     git submodule --quiet update --init --recursive
 
-    cd lib || exit 1
-    git checkout master
-    cd .. || return
 }
 
 prepare_env() {
