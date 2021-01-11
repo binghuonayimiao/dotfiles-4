@@ -224,7 +224,7 @@ get_file() {
 }
 run_install() {
     # Run as unattended if stdin is not a tty
-    if [ ! -t 0 ]; then
+    if [ -t 0 ]; then
         NOTTY=yes
     else
         NOTTY=no
