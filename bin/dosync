@@ -142,7 +142,7 @@ sync_options() {
     if [ $INSTALL_NERD = yes ]; then
 
         NOTIFY "Installing fonts"
-        mkdir -p ~/.local/share/fonts
+        mkdir -p ~/.local/share/NerdFonts
         cd ~/.local/share/fonts
         #git clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git && cd nerd-fonts
         wget https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/install.sh &&
