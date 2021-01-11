@@ -15,6 +15,14 @@ dotfiles_dir() {
         rm -rf "$DOTDIR"
         git clone --quiet --depth=1 "$REPO" "$DOTDIR"
     fi
+
+    git submodule --quiet sync --recursive
+    git submodule --quiet update --init --recursive
+
+    cd lib || exit 1
+    git checkout master
+    git pull origin master
+    cd ..
 }
 
 if [[ -z "$DOTFILES" ]]; then
