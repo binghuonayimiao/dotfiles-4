@@ -163,8 +163,6 @@ sync_config() {
     if [[ ! -s $SYNCFILE ]]; then
         if [[ -s $HOME/$DOTFILES/syncrc ]]; then
             SYNCFILE="$HOME/$DOTFILES/syncrc"
-        elif [[ -s $HOME/$DOTFILES/.syncrc ]]; then
-            SYNCFILE="$HOME/$DOTFILES/.syncrc"
         else
             echo "File syncrc doesnt exist, exiting"
             exit 1
