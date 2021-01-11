@@ -20,7 +20,6 @@ fi
 
 isdotdir() {
     if [ ! -d "$HOME/$DOTFILES" ]; then
-        rm -rf "$HOME/$DOTFILES"
         git clone --quiet --depth=1 "$ORIGIN" "$HOME/$DOTFILES"
     fi
 }
@@ -56,6 +55,7 @@ checkin() {
 
 gitpull() {
     getgitorigin
+    isdotdir
     cd "$HOME/$DOTFILES"
     isgitlayout
     echo "Pulling latest changes from $ORIGIN"
