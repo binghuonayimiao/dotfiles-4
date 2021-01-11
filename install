@@ -29,7 +29,7 @@ main() {
 
     TITLE "Running auto install"
     CUTLINE
-    if [ ! -t 0 ]; then
+    if [ -t 0 ]; then
         ./bin/dosync -unanttended
     else
         ./bin/dosync
