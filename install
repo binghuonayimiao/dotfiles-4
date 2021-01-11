@@ -11,6 +11,7 @@ fi
 if [ ! -f "lib/utilities.sh" ]; then
 
     git submodule --quiet sync --recursive
+    git submodule --quiet foreach --recursive git fetch
     git submodule --quiet update --init --recursive
 fi
 cd lib || exit 1
@@ -20,17 +21,11 @@ cd .. || exit 1
 
 source "lib/utilities.sh"
 
-prepare_env() {
-
+main() {
     TITLE "Device:"
     CUTLINE
     BOLDBLUE "$DISTRO | $UARCH | $UKERNEL"
     CUTLINE
-
-}
-
-main() {
-    prepare_env
 
     TITLE "Running auto install"
     CUTLINE
