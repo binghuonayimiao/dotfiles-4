@@ -63,8 +63,8 @@ zplug "zsh-users/zsh-autosuggestions"
 #zplug "marlonrichert/zsh-autocomplete"
 #zplug "zpm-zsh/ls" # ls alias (ls colors)
 #zplug "desyncr/auto-ls"
-#zplug "lukechilds/zsh-nvm"
-#zplug "mattberther/zsh-pyenv"
+zplug "lukechilds/zsh-nvm"
+zplug "mattberther/zsh-pyenv"
 zplug "MichaelAquilina/zsh-you-should-use"
 zplug "unixorn/git-extra-commands"
 zplug "zdharma/fast-syntax-highlighting", defer:2
