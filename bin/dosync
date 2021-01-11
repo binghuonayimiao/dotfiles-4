@@ -162,9 +162,28 @@ sync_options() {
         #      rm -rf nerd-fonts
     fi
     if [ $INSTALL_DEPS = yes ]; then
-        deps=(curl wget ruby python chroma lsb-release)
-        UPDATE || return
-        INSTALL "$deps" || return
+        case $OS in
+        'Arch')
+            UPDATE
+            INSTALL "curl wget ruby python chromaprint lsb-release"
+            ;;
+        'Ubuntu')
+            UPDATE
+            INSTALL "curl wget ruby python chroma lsb-release"
+            ;;
+        'Debian')
+            UPDATE
+            INSTALL "curl wget ruby python chroma lsb-release"
+            ;;
+        'Armbian')
+            UPDATE
+            INSTALL "curl wget ruby python chroma lsb-release"
+            ;;
+        'Raspbian')
+            UPDATE
+            INSTALL "curl wget ruby python chroma lsb-release"
+            ;;
+        esac
         exit 0
     fi
     #    # If this user's login shell is already "zsh", do not attempt to switch.
