@@ -4,7 +4,7 @@
 # ============================================================================= #
 trap 'exit' SIGINT SIGQUIT SIGTSTP
 
-DOTDIR="$HOME/.dotfiles"
+DOTFILES=".dotfiles"
 SYNCFILE="$HOME/$DOTFILES/syncrc"
 GITOPT="-q"
 GITSUB="--quiet"
@@ -13,28 +13,79 @@ INSTALL_FONTS="${INSTALL_FONTS:-no}"
 INSTALL_DEPS="${INSTALL_DEPS:-no}"
 INSTALL_NERD="${INSTALL_NERD:-no}"
 
-if [ ! -f "$HOME/$DOTFILES/lib/utilities.sh" ]; then
+isdotdir() {
+    if [ -d "$HOME/$DOTFILES" ]; then
+        cd "$HOME/$DOTFILES"
+    else
+        rm -rf "$HOME/$DOTFILES"
+        git clone --quiet --depth=1 "$ORIGIN" "$HOME/$DOTFILES"
+    fi
+}
+isgitlayout() {
+    if [[ ! -d .git ]]; then
+        echo "Not a git repository"
+        exit 1
+    fi
+}
+
+initlocal() {
+    isdotdir
+    isgitlayout
+    # init the main repo
+    git submodule $GITSUB update --init --recursive
+    cd
+}
+
+getgitorigin() {
+    isdotdir
     if [[ -d .git ]]; then
         ORIGIN=$(git config -l | grep remote.origin.url | awk -F'=' '{print $2}')
     fi
-    if [[ -z "$DOTFILES" ]]; then
-        DOTFILES=".dotfiles"
-    fi
-    if [ -d "$DOTDIR/.git" ]; then
-        cd "$DOTDIR"
-        git pull --quiet --rebase origin main || exit 1
-    else
-        rm -rf "$DOTDIR"
-        git clone --quiet --depth=1 "$ORIGIN" "$DOTDIR"
-    fi
-    cd "$DOTDIR"
-    git submodule --quiet sync --recursive
-    git submodule --quiet update --init --recursive
+    cd
+}
+
+checkin() {
+    gitcommit && gitpush
+}
+
+gitpull() {
+    getgitorigin
+    isdotdir
+    isgitlayout
+    echo "Pulling latest changes from $ORIGIN"
+    git pull $GITOPT
+    echo "Pulling latest changes for submodules"
+    # Required if a submodule origin changed
+    git submodule $GITSUBOPT sync
+    git submodule $GITSUBOPT foreach --recursive git fetch
+    git submodule $GITSUBOPT update --init --recursive
+    cd
+}
+
+gitcommit() {
+    getgitorigin
+    isdotdir
+    echo "Commiting latest changes to the repository"
+    git commit -a $GITOPT
+    cd
+}
+
+gitpush() {
+    getgitorigin
+    cd "$HOME/$DOTFILES"
+    echo "Pushing changes upstream to $ORIGIN" &&
+        git push $GITOPT
+    cd
+}
+
+if [ ! -f "$HOME/$DOTFILES/lib/utilities.sh" ]; then
+    getgitorigin
+    gitpull
 
     cd lib || exit 1
     echo "Updating library"
     git checkout master
-    git pull --quiet origin master
+    git pull $GITOPT origin master
     cd ..
 fi
 
@@ -61,65 +112,6 @@ vscodesettings() {
 
 removebrokenlinks() {
     find $HOME -maxdepth 1 -name ".*" -type l | while read f; do if [ ! -e "$f" ]; then rm -f "$f"; fi; done
-}
-
-isgitlayout() {
-    if [[ ! -d .git ]]; then
-        echo "Not a git repository"
-        exit 1
-    fi
-}
-
-initlocal() {
-    cd "$HOME/$DOTFILES"
-    isgitlayout
-    # init the main repo
-    git submodule $GITSUB update --init --recursive
-    cd
-}
-
-getgitorigin() {
-    cd "$HOME/$DOTFILES"
-    if [[ -d .git ]]; then
-        ORIGIN=$(git config -l | grep remote.origin.url | awk -F'=' '{print $2}')
-    fi
-    cd
-}
-
-checkin() {
-    cd "$HOME/$DOTFILES"
-    gitcommit && gitpush
-    cd
-}
-
-gitpull() {
-    getgitorigin
-    cd "$HOME/$DOTFILES"
-    isgitlayout
-    echo "Pulling latest changes from $ORIGIN"
-    git pull $GITOPT
-    echo "Pulling latest changes for submodules"
-    # Required if a submodule origin changed
-    git submodule $GITSUBOPT sync
-    git submodule $GITSUBOPT foreach --recursive git fetch
-    git submodule $GITSUBOPT update --init --recursive
-    cd
-}
-
-gitcommit() {
-    getgitorigin
-    cd "$HOME/$DOTFILES"
-    echo "Commiting latest changes to the repository"
-    git commit -a $GITOPT
-    cd
-}
-
-gitpush() {
-    getgitorigin
-    cd "$HOME/$DOTFILES"
-    echo "Pushing changes upstream to $ORIGIN" &&
-        git push $GITOPT
-    cd
 }
 
 sync_options() {
@@ -204,18 +196,12 @@ files_list() {
         echo "Specify files to sync in syncrc file"
         exit 1
     fi
-    CONFIGDOTFILES=$(grep '^DOTFILES=' $SYNCFILE | awk -F"=" '{print $2}')
-    if [[ ! -z "$CONFIGDOTFILES" ]]; then
-        DOTDIR="$HOME/$CONFIGDOTFILES"
-    else
-        DOTDIR="$HOME/.dotfiles"
-    fi
 }
 
 get_file() {
     srcfile="$(echo $file | awk -F: '{print $1}')"
     dstfile="$(echo $file | awk -F: '{print $2}')"
-    dotsrc="$DOTDIR/$srcfile"
+    dotsrc="$HOME/$DOTFILES/$srcfile"
 
     if [[ $dstfile = "" ]]; then
         dstfile=".$(basename "$srcfile")"
