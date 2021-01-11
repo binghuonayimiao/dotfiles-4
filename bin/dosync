@@ -125,10 +125,9 @@ gitpush() {
 sync_options() {
     # Skip setup if the user wants or stdin is closed (not running interactively).
     if [ $NOTTY = yes ]; then
-        export overwrite_all='true' backup_all='false' skip_all='false'
+        export overwrite_all='false' backup_all='true' skip_all='false'
     else
         export overwrite_all='false' backup_all='false' skip_all='false'
-        export TERM="xterm-256color"
     fi
 
     if [ $INSTALL_FONTS = yes ]; then
@@ -225,7 +224,7 @@ get_file() {
 }
 run_install() {
     # Run as unattended if stdin is not a tty
-    if [ -t 0 ]; then
+    if [ ! -t 0 ]; then
         NOTTY=yes
     else
         NOTTY=no
