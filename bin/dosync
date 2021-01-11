@@ -85,6 +85,7 @@ gitpush() {
 }
 
 if [ ! -f "$HOME/$DOTFILES/lib/utilities.sh" ]; then
+    getgitorigin
     gitpull
 
     cd "$HOME/$DOTFILES/lib" || exit 1
