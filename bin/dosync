@@ -24,6 +24,7 @@ isdotdir() {
     else
         rm -rf "$HOME/$DOTFILES"
         git clone --quiet --depth=1 "$ORIGIN" "$HOME/$DOTFILES"
+        cd "$HOME/$DOTFILES"
     fi
 }
 isgitlayout() {
