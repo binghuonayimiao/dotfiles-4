@@ -5,7 +5,6 @@
 trap 'exit' SIGINT SIGQUIT SIGTSTP
 
 DOTDIR="$HOME/.dotfiles"
-REPO="https://github.com/ss-o/dotfiles"
 SYNCFILE="$HOME/$DOTFILES/syncrc"
 GITOPT="-q"
 GITSUB="--quiet"
@@ -15,6 +14,9 @@ INSTALL_DEPS="${INSTALL_DEPS:-no}"
 INSTALL_NERD="${INSTALL_NERD:-no}"
 
 if [ ! -f "$HOME/$DOTFILES/lib/utilities.sh" ]; then
+    if [[ -d .git ]]; then
+        ORIGIN=$(git config -l | grep remote.origin.url | awk -F'=' '{print $2}')
+    fi
     if [[ -z "$DOTFILES" ]]; then
         DOTFILES=".dotfiles"
     fi
@@ -23,7 +25,7 @@ if [ ! -f "$HOME/$DOTFILES/lib/utilities.sh" ]; then
         git pull --quiet --rebase origin main || exit 1
     else
         rm -rf "$DOTDIR"
-        git clone --quiet --depth=1 "$REPO" "$DOTDIR"
+        git clone --quiet --depth=1 "$ORIGIN" "$DOTDIR"
     fi
     cd "$DOTDIR"
     git submodule --quiet sync --recursive
