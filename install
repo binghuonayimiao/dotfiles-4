@@ -4,6 +4,10 @@
 # ============================================================================= #
 trap 'exit' SIGINT SIGQUIT SIGTSTP
 
+if [ -t 0 ]; then
+    export TERM="xterm-256color"
+
+fi
 if [ ! -f "lib/utilities.sh" ]; then
     git submodule --quiet sync --recursive
     git submodule --quiet update --init --recursive
@@ -29,11 +33,7 @@ main() {
 
     TITLE "Running auto install"
     CUTLINE
-    if [ -t 0 ]; then
-        ./bin/dosync -unanttended
-    else
-        ./bin/dosync
-    fi
+    ./bin/dosync
     CUTLINE
     exec "zsh"
     exit 0
