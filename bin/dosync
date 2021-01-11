@@ -18,9 +18,9 @@ INSTALL_NERD="${INSTALL_NERD:-no}"
 NOTTY="${NOTTY:-no}"
 HELP="${HELP:-no}"
 
-if [ ! -z "$TERM" ]; then
-    export TERM="xterm-256color"
-fi
+#if [ ! -z "$TERM" ]; then
+#    export TERM="xterm-256color"
+#fi
 
 die() {
     echo "$@" >&2
@@ -210,11 +210,16 @@ get_file() {
     dotfile="$HOME/$dstfile"
 }
 run_install() {
+    if has_terminal; then
+        export TERM="xterm-256color"
+    fi
     # Run as unattended if stdin is not a tty
     if ! is_tty; then
         NOTTY=yes
     fi
-
+    if is_piped; then
+        echo "Pipe"
+    fi
     while [ $# -gt 0 ]; do
         case $1 in
         -unattended) NOTTY=yes ;;
