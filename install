@@ -4,8 +4,16 @@
 # ============================================================================= #
 trap exit SIGINT SIGQUIT SIGTSTP
 
-git submodule --quiet sync --recursive
-git submodule --quiet update --init --recursive
+#git submodule --quiet sync --recursive
+#git submodule --quiet update --init --recursive
+if [ ! -f "lib/utilities.sh" ]; then
+    git submodule init
+    git submodule update
+fi
+cd lib || exit 1
+git checkout master
+git pull origin master
+cd ..
 
 source "lib/utilities.sh"
 
