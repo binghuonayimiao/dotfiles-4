@@ -2,17 +2,17 @@
 DOTFILES=.dotfiles
 
 [files]
-#task/task
-#task/taskrc
-#python/pylintrc
-#python/pythonrc
+task/task
+task/taskrc
+python/pylintrc
+python/pythonrc
 nano/nanorc
 git/gitconfig
 git/gitconfig.local
 git/gitattributes
 git/gitignore
-#git/gitk
-#git/tigrc
+git/gitk
+git/tigrc
 zsh/zlogin
 zsh/zlogout
 zsh/zprofile
