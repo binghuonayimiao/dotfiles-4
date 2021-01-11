@@ -31,6 +31,7 @@ git submodule --quiet sync --recursive
 git submodule --quiet update --init --recursive
 
 cd lib || exit 1
+echo "Updating library"
 git checkout master
 git pull --quiet origin master
 cd ..
@@ -110,6 +111,7 @@ gitcommit() {
     getgitorigin
     cd "$HOME/$DOTFILES"
     echo "Commiting latest changes to the repository"
+    git add .
     git commit -a $GITOPT
     cd
 }
