@@ -16,6 +16,7 @@ cd ..
 source "lib/utilities.sh"
 
 prepare_env() {
+
     TITLE "Device:"
     CUTLINE
     BOLDBLUE "$DISTRO | $UARCH | $UKERNEL"
@@ -28,7 +29,11 @@ main() {
 
     TITLE "Running auto install"
     CUTLINE
-    ./bin/dosync
+    if [ ! -t 0 ]; then
+        ./bin/dosync -unanttended
+    else
+        ./bin/dosync
+    fi
     CUTLINE
     exec "zsh"
     exit 0

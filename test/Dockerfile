@@ -8,8 +8,7 @@ ARG PASSWORD=ss-o
 ENV HOME /home/${USERNAME}
 
 RUN pacman -Syu --noconfirm
-RUN pacman -S base base-devel xdg-user-dirs git go wget ruby zsh python lsb-release nano &&\
-    grc python-pygments --needed --noconfirm
+RUN pacman -S base base-devel xdg-user-dirs git go wget ruby zsh python lsb-release nano grc python-pygments --needed --noconfirm
 
 RUN echo dotfiles > /etc/hostname
 RUN echo 'en_GB.UTF-8 UTF-8' >> /etc/locale.gen
@@ -20,7 +19,7 @@ RUN echo LANG=en_GB.UTF-8 > /etc/locale.conf
 RUN useradd -m -r -G wheel -s /bin/bash ${USERNAME}
 RUN echo "root:${PASSWORD}" | chpasswd
 RUN echo "${USERNAME}:${PASSWORD}" | chpasswd
-RUN echo '%wheel ALL=(ALL) NOPASSWD: ALL | EDITOR='tee -a' visudo
+RUN echo "%wheel ALL=(ALL) NOPASSWD: ALL | EDITOR='tee -a' visudo"
 
 ENV HOME /home/${USERNAME}
 WORKDIR /home/${USERNAME}
