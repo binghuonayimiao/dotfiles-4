@@ -16,7 +16,7 @@ fi
 cd lib || exit 1
 git checkout master
 git pull origin master
-cd "$HOME/$DOTFILES" || exit 1
+cd .. || exit 1
 
 source "lib/utilities.sh"
 
