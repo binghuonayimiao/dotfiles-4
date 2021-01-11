@@ -129,23 +129,23 @@ installer_config() {
         case $OS in
         'Arch')
             UPDATE
-            INSTALL "curl wget ruby python chromaprint lsb-release"
+            INSTALL "curl wget ruby python chromaprint grc lsb-release"
             ;;
         'Ubuntu')
             UPDATE
-            INSTALL "curl wget ruby python chroma lsb-release"
+            INSTALL "curl wget ruby python chroma grc lsb-release"
             ;;
         'Debian')
             UPDATE
-            INSTALL "curl wget ruby python chroma lsb-release"
+            INSTALL "curl wget ruby python chroma grc lsb-release"
             ;;
         'Armbian')
             UPDATE
-            INSTALL "curl wget ruby python chroma lsb-release"
+            INSTALL "curl wget ruby python chroma grc lsb-release"
             ;;
         'Raspbian')
             UPDATE
-            INSTALL "curl wget ruby python chroma lsb-release"
+            INSTALL "curl wget ruby python chroma grc lsb-release"
             ;;
         esac
         exit 0

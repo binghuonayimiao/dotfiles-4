@@ -6,9 +6,6 @@ if [[ $PMSPEC != *b* ]] {
   PATH=$PATH:"${0:h}/bin"
 }
 
-DEPENDENCES_ARCH+=( grc )
-DEPENDENCES_DEBIAN+=( grc )
-
 export LESS="$LESS -R -M"
 
 function ip() {
