@@ -15,7 +15,7 @@ git/gitconfig
 git/gitconfig.local
 git/gitattributes
 git/gitignore
-git/gitk/
+git/gitk
 git/tigrc
 
 zsh/zlogin
