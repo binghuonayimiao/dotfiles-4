@@ -6,6 +6,8 @@ DOTFILES=.dotfiles
 task/task
 task/taskrc
 
+nano/nanorc
+
 git/gitconfig
 git/gitconfig.local
 git/gitattributes
