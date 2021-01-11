@@ -78,8 +78,8 @@ zplug "$HOME/$DOTFILES/zsh/plugins", from:local
 # ============================================================================= #
 #zplug "romkatv/powerlevel10k", as:theme, depth:1
 #zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
-zplug "themes/robbyrussell", from:oh-my-zsh, as:theme
-#zplug "$HOME/$DOTFILES/zsh/themes", from:local, as:theme, use:ss-o.zsh-theme
+#zplug "themes/robbyrussell", from:oh-my-zsh, as:theme
+zplug "$HOME/$DOTFILES/zsh/themes", from:local, as:theme, use:ss-o.zsh-theme
 # ============================================================================= #
 #  ➜ ➜ ➜ INSTALL ZPLUG & LOAD
 # ============================================================================= #
