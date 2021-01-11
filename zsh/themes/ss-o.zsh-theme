@@ -1,5 +1,5 @@
 prompt() {
-        if [ ! -z "${GITHUB_USER}" ]; then
+    if [ ! -z "${GITHUB_USER}" ]; then
         local USERNAME="@${GITHUB_USER}"
     else
         local USERNAME="%n"
