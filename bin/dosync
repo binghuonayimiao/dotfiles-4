@@ -84,8 +84,6 @@ gitpush() {
 }
 
 if [ ! -f "$HOME/$DOTFILES/lib/utilities.sh" ]; then
-    getgitorigin
-    isdotdir
     gitpull
 
     cd lib || exit 1
