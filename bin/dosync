@@ -13,6 +13,10 @@ INSTALL_FONTS="${INSTALL_FONTS:-no}"
 INSTALL_DEPS="${INSTALL_DEPS:-no}"
 INSTALL_NERD="${INSTALL_NERD:-no}"
 
+if [ ! -z "$TERM" ]; then
+    export TERM="xterm-256color"
+fi
+
 isdotdir() {
     if [ -d "$HOME/$DOTFILES" ]; then
         cd "$HOME/$DOTFILES"
