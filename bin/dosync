@@ -80,24 +80,6 @@ gitpush() {
     cd
 }
 
-if [ ! -f "$HOME/$DOTFILES/lib/utilities.sh" ]; then
-    cd "$HOME/$DOTFILES"
-    getgitorigin
-    echo "Pulling latest changes from $ORIGIN"
-    git pull $GITOPT
-    echo "Pulling latest changes for submodules"
-    # Required if a submodule origin changed
-    git submodule $GITSUBOPT sync
-    git submodule $GITSUBOPT foreach --recursive git fetch
-    git submodule $GITSUBOPT update --init --recursive
-
-    cd "$HOME/$DOTFILES/lib" || exit 1
-    echo "Updating library"
-    git checkout master
-    git pull $GITOPT origin master
-    cd ..
-fi
-
 source "$HOME/$DOTFILES/lib/utilities.sh"
 source "$HOME/$DOTFILES/lib/installer.sh"
 
