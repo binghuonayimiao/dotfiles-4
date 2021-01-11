@@ -239,10 +239,6 @@ run_install() {
             gitpull
             exit 0
             ;;
-        -U)
-            gitpull
-            exit 0
-            ;;
         -c)
             gitcommit
             exit 0
