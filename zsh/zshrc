@@ -58,17 +58,17 @@ zplug "plugins/gpg-agent", from:oh-my-zsh
 #  ➜ ➜ ➜ ZPLUG EXTRAS
 # ============================================================================= #
 zplug "wuotr/zsh-plugin-vscode"
-zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-autosuggestions"
 #zplug "marlonrichert/zsh-autocomplete"
 #zplug "zpm-zsh/ls" # ls alias (ls colors)
 #zplug "desyncr/auto-ls"
 zplug "lukechilds/zsh-nvm"
-zplug "mattberther/zsh-pyenv"
+#zplug "mattberther/zsh-pyenv"
 zplug "MichaelAquilina/zsh-you-should-use"
 zplug "unixorn/git-extra-commands"
 zplug "zdharma/fast-syntax-highlighting", defer:2
 zplug "hlissner/zsh-autopair", defer:2
+zplug "zsh-users/zsh-completions", defer:2
 zplug "lukechilds/zsh-better-npm-completion", defer:2
 # ============================================================================= #
 #  ➜ ➜ ➜ LOCAL
