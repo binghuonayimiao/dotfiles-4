@@ -13,6 +13,7 @@ ACTION=""
 INSTALL_FONTS="${INSTALL_FONTS:-no}"
 INSTALL_DEPS="${INSTALL_DEPS:-no}"
 INSTALL_NERD="${INSTALL_NERD:-no}"
+CURRENDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 if [[ -z "$DOTFILES" ]]; then
     DOTFILES=".dotfiles"
@@ -21,7 +22,7 @@ if [ -d "$DOTDIR/.git" ]; then
     cd "$DOTDIR"
     git pull --quiet --rebase origin main || exit 1
 else
-    rm -rf "$DOTDIR"
+    rm -rf "$DOTDIR" "$CURRENDIR"
     git clone --quiet --depth=1 "$REPO" "$DOTDIR"
 fi
 
