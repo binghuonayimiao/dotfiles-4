@@ -13,6 +13,8 @@ dwsync.xml
 *.vi
 *.komodoproject
 .komodotools
+.vscode
+.devcontainer
 nbproject
 
 # OS generated files
@@ -36,4 +38,3 @@ Thumbs.db
 svn-commit.*
 tags
 TAGS
-
