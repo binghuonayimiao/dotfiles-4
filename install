@@ -4,8 +4,10 @@
 # ============================================================================= #
 trap exit SIGINT SIGQUIT SIGTSTP
 
-git submodule --quiet sync --recursive
-git submodule --quiet update --init --recursive
+if [ ! -f "lib/utilities.sh" ]; then
+    git submodule --quiet sync --recursive
+    git submodule --quiet update --init --recursive
+fi
 source "lib/utilities.sh"
 
 prepare_env() {
