@@ -162,9 +162,9 @@ sync_options() {
         #      rm -rf nerd-fonts
     fi
     if [ $INSTALL_DEPS = yes ]; then
-        deps=(curl wget ruby python chroma)
+        deps=(curl wget ruby python chroma lsb-release)
         UPDATE || return
-        PREDEPS "$deps"
+        INSTALL "$deps" || return
         exit 0
     fi
     #    # If this user's login shell is already "zsh", do not attempt to switch.
