@@ -12,6 +12,7 @@ GITSUBOPT="--quiet"
 INSTALL_FONTS="${INSTALL_FONTS:-no}"
 INSTALL_DEPS="${INSTALL_DEPS:-no}"
 INSTALL_NERD="${INSTALL_NERD:-no}"
+NOTTY="${NOTTY:-no}"
 
 if [ ! -z "$TERM" ]; then
     export TERM="xterm-256color"
@@ -129,7 +130,8 @@ sync_options() {
     if [ $INSTALL_FONTS = yes ]; then
 
         NOTIFY "Installing fonts"
-
+        mkdir -p ~/.local/share/fonts
+        cd ~/.local/share/fonts
         git clone https://github.com/powerline/fonts.git --depth=1
         cd fonts || return
         ./install.sh
@@ -139,12 +141,12 @@ sync_options() {
     fi
     if [ $INSTALL_NERD = yes ]; then
 
+        NOTIFY "Installing fonts"
         mkdir -p ~/.local/share/fonts
         cd ~/.local/share/fonts
-        git clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git && cd nerd-fonts
-        chmod +x install.sh && ./install.sh
-        #wget https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/install.sh &&
-        curl -fLo "Droid Sans Mono for Powerline Nerd Font Complete.otf" https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/DroidSansMono/complete/Droid%20Sans%20Mono%20Nerd%20Font%20Complete.otf
+        #git clone --depth 1 https://github.com/ryanoasis/nerd-fonts.git && cd nerd-fonts
+        wget https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/install.sh &&
+            chmod +x install.sh && ./install.sh
         exit 0
         #      git clone --depth=1 https://github.com/romkatv/nerd-fonts.git
         #      cd nerd-fonts
@@ -216,8 +218,6 @@ run_install() {
     # Run as unattended if stdin is not a tty
     if [ ! -t 0 ]; then
         NOTTY=yes
-    else
-        NOTTY=no
     fi
 
     while [ $# -gt 0 ]; do
