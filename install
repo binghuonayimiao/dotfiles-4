@@ -18,7 +18,6 @@ update_repo() {
 
     git submodule --quiet sync --recursive
     git submodule --quiet update --init --recursive
-
 }
 
 prepare_env() {
