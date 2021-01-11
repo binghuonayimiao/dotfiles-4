@@ -72,7 +72,7 @@ gitcommit() {
 
 gitpush() {
     getgitorigin
-    cd "$HOME/$DOTFILES"
+    isdotdir
     echo "Pushing changes upstream to $ORIGIN" &&
         git push $GITOPT
     cd
