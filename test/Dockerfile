@@ -8,7 +8,7 @@ ARG PASSWORD=ss-o
 ENV HOME /home/${USERNAME}
 
 RUN pacman -Syu --noconfirm
-RUN pacman -S base base-devel xdg-user-dirs git go wget ruby zsh python lsb-release nano grc python-pygments --needed --noconfirm
+RUN pacman -S base base-devel xdg-user-dirs git go wget ruby zsh python lsb-release nano grc openssh python-pygments --needed --noconfirm
 
 RUN echo dotfiles > /etc/hostname
 RUN echo 'en_GB.UTF-8 UTF-8' >> /etc/locale.gen
