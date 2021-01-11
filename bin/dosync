@@ -25,7 +25,7 @@ git submodule --quiet update --init --recursive
 
 cd lib || exit 1
 git checkout master
-git pull origin master
+git pull --quiet origin master
 cd ..
 
 source "$HOME/$DOTFILES/lib/utilities.sh"
