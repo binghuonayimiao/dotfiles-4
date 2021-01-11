@@ -2,7 +2,7 @@
 # ============================================================================= #
 #  ➜ ➜ ➜ TRAP
 # ============================================================================= #
-trap exit SIGINT SIGQUIT SIGTSTP
+trap 'exit' SIGINT SIGQUIT SIGTSTP
 
 if [ ! -f "lib/utilities.sh" ]; then
     git submodule --quiet sync --recursive
