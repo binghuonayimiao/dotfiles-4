@@ -4,10 +4,10 @@
 # ============================================================================= #
 trap 'exit' SIGINT SIGQUIT SIGTSTP
 
-if [ -t 0 ]; then
+if [ ! -z "$TERM" ]; then
     export TERM="xterm-256color"
-
 fi
+
 if [ ! -f "lib/utilities.sh" ]; then
     git submodule --quiet sync --recursive
     git submodule --quiet update --init --recursive
