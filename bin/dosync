@@ -93,7 +93,6 @@ sync_options() {
     if [ $NOTTY = yes ]; then
         export overwrite_all='false' backup_all='true' skip_all='false'
     else
-        echo "DoSync ver:$DOSYNCV"
         export overwrite_all='false' backup_all='false' skip_all='false'
     fi
 
