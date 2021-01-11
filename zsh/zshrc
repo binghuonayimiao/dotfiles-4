@@ -54,10 +54,6 @@ zplug "plugins/gpg-agent", from:oh-my-zsh
 #    as:command, \
 #    use:progbar
 # ============================================================================= #
-#  ➜ ➜ ➜ PREZTO
-# ============================================================================= #
-#zplug "sorin-ionescu/prezto" from:prezto
-# ============================================================================= #
 #  ➜ ➜ ➜ ZPLUG EXTRAS
 # ============================================================================= #
 zplug "wuotr/zsh-plugin-vscode"
@@ -80,10 +76,10 @@ zplug "$HOME/$DOTFILES/zsh/plugins", from:local
 # ============================================================================= #
 #  ➜ ➜ ➜ PROFILES
 # ============================================================================= #
-#source "$HOME/$DOTFILES/zsh/config/profile/p10k.profile.zsh"
-#source "$HOME/$DOTFILES/zsh/config/profile/spaceship.profile.zsh"
-#source "$HOME/$DOTFILES/zsh/config/profile/ohmyzsh.profile.zsh"
-source "$HOME/$DOTFILES/zsh/config/profile/local.profile.zsh"
+#zplug "romkatv/powerlevel10k", as:theme, depth:1
+#zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
+zplug "themes/robbyrussell", from:oh-my-zsh, as:theme
+#zplug "$HOME/$DOTFILES/zsh/themes", from:local, as:theme, use:ss-o.zsh-theme
 # ============================================================================= #
 #  ➜ ➜ ➜ INSTALL ZPLUG & LOAD
 # ============================================================================= #
@@ -98,3 +94,9 @@ zplug load
 [ -f ~/.config/fzf/key-bindings.zsh ] && source ~/.config/fzf/key-bindings.zsh
 [ -f ~/.config/fzf/completion.zsh ] && source ~/.config/fzf/completion.zsh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+#source ~/.dotfiles/zsh/config/p10k/p10k-lean.zsh
+#source ~/.dotfiles/zsh/config/p10k/p10k-classic.zsh
+#source ~/.dotfiles/zsh/config/p10k/p10k-rainbow.zsh
+#source ~/.dotfiles/zsh/config/p10k/p10k-lean-8colors.zsh
+#source ~/.dotfiles/zsh/config/p10k/p10k-robbyrussell.zsh
+#source ~/.dotfiles/zsh/config/p10k/p10k-robby-by-sall.zsh
