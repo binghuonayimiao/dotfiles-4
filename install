@@ -4,14 +4,11 @@
 # ============================================================================= #
 trap exit SIGINT SIGQUIT SIGTSTP
 
-update_repo() {
-    git submodule --quiet sync --recursive
-    git submodule --quiet update --init --recursive
-}
+git submodule --quiet sync --recursive
+git submodule --quiet update --init --recursive
+source "lib/utilities.sh"
 
 prepare_env() {
-    source "lib/utilities.sh"
-
     TITLE "Device:"
     CUTLINE
     BOLDBLUE "$DISTRO | $UARCH | $UKERNEL"
@@ -20,7 +17,6 @@ prepare_env() {
 }
 
 main() {
-    update_repo
     prepare_env
 
     TITLE "Running auto install"
