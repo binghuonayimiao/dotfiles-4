@@ -4,6 +4,7 @@
 # ============================================================================= #
 trap 'exit' SIGINT SIGQUIT SIGTSTP
 
+DOSYNCV="0.1"
 DOTFILES=".dotfiles"
 SYNCFILE="$HOME/$DOTFILES/syncrc"
 GITOPT="-q"
@@ -13,6 +14,7 @@ INSTALL_FONTS="${INSTALL_FONTS:-no}"
 INSTALL_DEPS="${INSTALL_DEPS:-no}"
 INSTALL_NERD="${INSTALL_NERD:-no}"
 NOTTY="${NOTTY:-no}"
+HELP="${HELP:-no}"
 
 if [ ! -z "$TERM" ]; then
     export TERM="xterm-256color"
@@ -91,6 +93,7 @@ sync_options() {
     if [ $NOTTY = yes ]; then
         export overwrite_all='false' backup_all='true' skip_all='false'
     else
+        echo "DoSync ver:$DOSYNCV"
         export overwrite_all='false' backup_all='false' skip_all='false'
     fi
 
@@ -115,6 +118,9 @@ sync_options() {
         #wget https://raw.githubusercontent.com/ryanoasis/nerd-fonts/master/install.sh &&
         chmod +x install.sh && ./install.sh
         exit 0
+    fi
+    if [ $HELP = yes ]; then
+        return
     fi
 }
 installer_config() {
@@ -190,6 +196,7 @@ run_install() {
         -powerline-fonts) INSTALL_FONTS=yes ;;
         -nerd-complete) INSTALL_NERD=yes ;;
         -deps) INSTALL_DEPS=yes ;;
+        -h | --help) HELP=yes ;;
         -u | --pull)
             gitpull
             exit 0
@@ -209,7 +216,6 @@ run_install() {
         esac
         shift
     done
-
     removebrokenlinks
     sync_options "$@"
     installer_config "$@"
