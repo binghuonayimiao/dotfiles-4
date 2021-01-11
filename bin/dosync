@@ -19,14 +19,12 @@ if [ ! -z "$TERM" ]; then
 fi
 
 isdotdir() {
-    if [ -d "$HOME/$DOTFILES" ]; then
-        cd "$HOME/$DOTFILES"
-    else
+    if [ ! -d "$HOME/$DOTFILES" ]; then
         rm -rf "$HOME/$DOTFILES"
         git clone --quiet --depth=1 "$ORIGIN" "$HOME/$DOTFILES"
-        cd "$HOME/$DOTFILES"
     fi
 }
+
 isgitlayout() {
     if [[ ! -d .git ]]; then
         echo "Not a git repository"
@@ -36,6 +34,7 @@ isgitlayout() {
 
 initlocal() {
     isdotdir
+    cd "$HOME/$DOTFILES"
     isgitlayout
     # init the main repo
     git submodule $GITSUB update --init --recursive
@@ -44,6 +43,7 @@ initlocal() {
 
 getgitorigin() {
     isdotdir
+    cd "$HOME/$DOTFILES"
     if [[ -d .git ]]; then
         ORIGIN=$(git config -l | grep remote.origin.url | awk -F'=' '{print $2}')
     fi
@@ -56,7 +56,7 @@ checkin() {
 
 gitpull() {
     getgitorigin
-    isdotdir
+    cd "$HOME/$DOTFILES"
     isgitlayout
     echo "Pulling latest changes from $ORIGIN"
     git pull $GITOPT
@@ -71,6 +71,7 @@ gitpull() {
 gitcommit() {
     getgitorigin
     isdotdir
+    cd "$HOME/$DOTFILES"
     echo "Commiting latest changes to the repository"
     git commit -a $GITOPT
     cd
@@ -79,6 +80,7 @@ gitcommit() {
 gitpush() {
     getgitorigin
     isdotdir
+    cd "$HOME/$DOTFILES"
     echo "Pushing changes upstream to $ORIGIN" &&
         git push $GITOPT
     cd
@@ -86,6 +88,7 @@ gitpush() {
 
 if [ ! -f "$HOME/$DOTFILES/lib/utilities.sh" ]; then
     isdotdir
+    cd "$HOME/$DOTFILES"
     getgitorigin
     echo "Pulling latest changes from $ORIGIN"
     git pull $GITOPT
