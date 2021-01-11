@@ -4,35 +4,30 @@
 # ============================================================================= #
 trap 'exit' SIGINT SIGQUIT SIGTSTP
 
-dotfiles_dir() {
-    DOTDIR="$HOME/.dotfiles"
-    REPO="https://github.com/ss-o/dotfiles"
+DOTDIR="$HOME/.dotfiles"
+REPO="https://github.com/ss-o/dotfiles"
 
-    if [[ -z "$DOTFILES" ]]; then
-        DOTFILES=".dotfiles"
-    fi
-    if [ -d "$DOTDIR/.git" ]; then
-        cd "$DOTDIR"
-        git pull --quiet --rebase origin main || exit 1
-    else
-        rm -rf "$DOTDIR"
-        git clone --quiet --depth=1 "$REPO" "$DOTDIR"
-    fi
-
-    cd "$DOTDIR"
-
-    git submodule --quiet sync --recursive
-    git submodule --quiet update --init --recursive
-
-    cd lib || exit 1
-    git checkout master
-    git pull origin master
-    cd ..
-}
-
-if [ ! -f "$HOME/$DOTFILES/lib/utilities.sh" ]; then
-    dotfiles_dir
+if [[ -z "$DOTFILES" ]]; then
+    DOTFILES=".dotfiles"
 fi
+if [ -d "$DOTDIR/.git" ]; then
+    cd "$DOTDIR"
+    git pull --quiet --rebase origin main || exit 1
+else
+    rm -rf "$DOTDIR"
+    git clone --quiet --depth=1 "$REPO" "$DOTDIR"
+fi
+
+cd "$DOTDIR"
+
+git submodule --quiet sync --recursive
+git submodule --quiet update --init --recursive
+
+cd lib || exit 1
+git checkout master
+git pull origin master
+cd ..
+
 source "$HOME/$DOTFILES/lib/utilities.sh"
 source "$HOME/$DOTFILES/lib/installer.sh"
 
