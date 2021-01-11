@@ -1,6 +1,6 @@
-
-DEPENDENCES_ARCH+=( python-pygmentize, chroma )
-DEPENDENCES_DEBIAN+=( python-pygmentize, chroma )
+#!/usr/bin/env zsh
+DEPENDENCES_ARCH+=( python-pygments, chroma )
+DEPENDENCES_DEBIAN+=( chroma )
 # Easier alias to use the plugin
 alias ccat="colorize_cat"
 alias cless="colorize_less"
