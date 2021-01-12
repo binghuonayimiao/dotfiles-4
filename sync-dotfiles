@@ -1,0 +1,301 @@
+#!/usr/bin/python3
+
+import cStringIO
+import getopt
+import os
+import shutil
+import subprocess
+import sys
+import tarfile
+import tempfile
+
+# Magic constants.
+CONFIG_FILE = '~/.sync-dotfiles.conf'
+FILES_SECTION = 'files:'
+EXCLUDE_SECTION = 'exclude:'
+HOSTS_SECTION = 'hosts:'
+LOCAL_HOST = 'local'
+
+# Portable color codes from http://en.wikipedia.org/wiki/ANSI_escape_code#Colors.
+COLORS = dict(black=0, red=1, green=2, yellow=3,
+              blue=4, magenta=5, cyan=6, white=7)
+
+
+class sync_dotfiles:  # {{{1
+
+    def __init__(self, name):  # {{{2
+        # Initialize attributes.
+        self.hosts = {}
+        self.filenames = []
+        self.excluded = []
+        self.dotfiles = {}
+        self.configfile = CONFIG_FILE
+        self.transport = auto_transport()
+        self.name = self.fmtpath(name)
+        self.verbosity = 0
+
+    def run(self, args):  # {{{2
+        # Parse command line arguments.
+        try:
+            opts, hostnames = getopt.getopt(args, 'vf:trh',
+                                            ['verbose', 'config', 'tar', 'rsync', 'help'])
+            for name, value in opts:
+                if name in ('-v', '--verbose'):
+                    self.verbosity += 1
+                elif name in ('-f', '--config'):
+                    self.configfile = value
+                elif name in ('-t', '--tar'):
+                    self.transport = tar_transport()
+                elif name in ('-r', '--rsync'):
+                    self.transport = rsync_transport()
+                elif name in ('-h', '--help'):
+                    self.usage()
+                else:
+                    self.fatal("Invalid option %r!", name)
+        except getopt.GetoptError, err:
+            self.fatal(str(err))
+        # Read configuration file.
+        self.readconfig(self.configfile)
+        # Validate/select hosts to synchronize.
+        if hostnames != []:
+            for host in hostnames:
+                if host not in self.hosts:
+                    validnames = ', '.join(
+                        '%r' % h for h in sorted(self.hosts.keys()))
+                    self.fatal("Unknown host %r! (known hosts: %s)",
+                               host, validnames)
+        else:
+            hostnames = self.hosts.keys()
+        # Generate the ANSI escape code for the local machine.
+        self.pattern = self.colorcode(self.hosts[LOCAL_HOST])
+        # Read dotfiles into memory.
+        dotfiles = self.readfiles()
+        # Synchronize dotfiles with selected hosts.
+        for host in hostnames:
+            if host != LOCAL_HOST:
+                self.uploadfiles(
+                    host, self.hosts[host], dotfiles, self.transport)
+
+    def usage(self):  # {{{2
+        print "Usage: %s [OPTS] [HOSTS]" % self.name
+        print
+        print "If you don't specify any HOSTS your dotfiles will be synchronized"
+        print "with all known hosts (defined in the file %s). " % self.configfile
+        print
+        print "Valid options are:"
+        print "  -h, --help     show this message and exit"
+        print "  -v, --verbose  increase verbosity (useful up to -vvv)"
+        print "  -f, --config   specify path to configuration file"
+        print "  -t, --tar      select tar transport mechanism (slow but always works)"
+        print "  -r, --rsync    select rsync transport method (fast but not always supported)"
+        sys.exit(0)
+
+    def uploadfiles(self, host, color, dotfiles, transport):  # {{{2
+        substitute = self.colorcode(color)
+        self.message(2, "Preparing files for %s ..", host)
+        transport.init(host, self)
+        for dotfile in dotfiles:
+            self.message(3, " - Including %s", dotfile.path)
+            if not dotfile.isdir():
+                dotfile.realdata = dotfile.data.replace(
+                    self.pattern, substitute)
+            transport.include(dotfile)
+        transport.send(host, self.verbosity >= 2, self)
+
+    def message(self, lvl, fmt, *args):  # {{{2
+        if self.verbosity >= lvl:
+            sys.stderr.write((fmt % args) + '\n')
+
+    def cmdmsg(self, command):  # {{{2
+        self.message(1, "Executing external command %s", command)
+
+    def cmderr(self, status, command):  # {{{2
+        self.fatal("External command failed with status %i:\n\n%s",
+                   status, command)
+
+    def fmtpath(self, path):  # {{{2
+        return path.replace(os.environ['HOME'], '~')
+
+    def fatal(self, fmt, *args):  # {{{2
+        self.message(0, '%s: ' + fmt, self.name, *args)
+        sys.exit(1)
+
+    def colorcode(self, name):  # {{{2
+        return '[0;3%dm' % COLORS[name]
+
+    def readconfig(self, configfile):  # {{{2
+        abspath = os.path.expanduser(configfile)
+        # Make sure configuration file exists.
+        if not os.path.exists(abspath):
+            self.fatal("Missing %s configuration file!", configfile)
+        # Parse file using simple state machine.
+        state = 'default'
+        self.message(1, "Reading configuration from %s", configfile)
+        for idx, line in enumerate(open(abspath)):
+            line = line.strip()
+            if line in ('', FILES_SECTION, EXCLUDE_SECTION, HOSTS_SECTION):
+                state = line or 'default'
+            elif state == FILES_SECTION:
+                self.filenames.append(line)
+            elif state == EXCLUDE_SECTION:
+                self.excluded.append(line)
+            elif state == HOSTS_SECTION:
+                host, color = line.split(':')
+                color = color.strip().lower()
+                if color not in COLORS:
+                    self.fatal("Invalid color name %r on line %i of %r!",
+                               color, idx + 1, configfile)
+                self.hosts[host.strip()] = color
+            else:
+                self.fatal("Line %i in %r isn't inside a section!",
+                           idx + 1, configfile)
+        # Validate configuration.
+        if LOCAL_HOST not in self.hosts:
+            msg = "You haven't defined the color of your local prompt so I don't know what to"
+            msg += "\nreplace! Hint: Add a %r line to the %r section of %r."
+            self.fatal(msg, LOCAL_HOST, HOSTS_SECTION, configfile)
+
+    def readfiles(self):  # {{{2
+        # Enable use of relative pathnames.
+        os.chdir(os.environ['HOME'])
+        files = []
+        for dotfile in self.filenames:
+            self.readfiles_r(files, dotfile)
+        return files
+
+    def readfiles_r(self, files, path):
+        if path in self.excluded:
+            self.message(1, "Ignoring %s", path)
+        else:
+            if os.path.isdir(path):
+                files.append(container(path=path, info=os.stat(path)))
+                for entry in os.listdir(path):
+                    self.readfiles_r(files, os.path.join(path, entry))
+            elif not self.vimswapfile(path):
+                handle = open(path)
+                data = handle.read()
+                handle.close()
+                files.append(container(path=path, info=os.stat(path),
+                                       data=data, matches=data.find(self.pattern) >= 0))
+
+    def vimswapfile(self, path):
+        head, tail = os.path.split(path)
+        return tail[0] == '.' and tail[-4:-1] == '.sw' \
+            or len(tail) == 3 and tail[0:2] == '.sw'
+
+
+class auto_transport:  # {{{1
+
+    def init(self, host, script):  # {{{2
+        if rsync_transport.available(host):
+            self.transport = rsync_transport()
+        else:
+            self.transport = tar_transport()
+        self.transport.init(host, script)
+
+    def include(self, dotfile):  # {{{2
+        self.transport.include(dotfile)
+
+    def send(self, host, verbose, script):  # {{{2
+        self.transport.send(host, verbose, script)
+
+
+class tar_transport:  # {{{1
+
+    def init(self, host, script):  # {{{2
+        self.buf = cStringIO.StringIO()
+        self.tarfile = tarfile.open(fileobj=self.buf, mode='w:bz2')
+
+    def include(self, dotfile):  # {{{2
+        if not dotfile.isdir():
+            info = self.tarfile.gettarinfo(name=dotfile.path)
+            self.tarfile.addfile(info, cStringIO.StringIO(dotfile.realdata))
+
+    def send(self, host, verbose, script):  # {{{2
+        script.message(0, "Uploading files to %s using tar ..", host)
+        self.tarfile.close()
+        self.buf.seek(0)
+        remotecmd = 'tar x' + (verbose and 'v' or '') + 'jf -'
+        command = 'ssh ' + host + ' ' + remotecmd
+        script.cmdmsg(command)
+        ssh = subprocess.Popen(['ssh', host, remotecmd], stdin=subprocess.PIPE)
+        ssh.communicate(input=self.buf.read())
+        self.buf.close()
+        if ssh.returncode:
+            script.cmderr(ssh.returncode, command)
+
+
+class rsync_transport:  # {{{1
+
+    supportedhosts = {}
+
+    @classmethod
+    def available(cls, host):  # {{{2
+        if host not in cls.supportedhosts:
+            command = 'rsync --version > /dev/null 2>&1'
+            cls.supportedhosts[host] = os.system(command) == 0 \
+                and os.system('ssh %s %s' % (host, command)) == 0
+        return cls.supportedhosts[host]
+
+    def init(self, host, script):  # {{{2
+        if not rsync_transport.available(host):
+            script.fatal("rsync support explicitly requested but unavailable!")
+        self.directory = tempfile.mkdtemp()
+        self.metadata = []
+
+    def include(self, dotfile):  # {{{2
+        path = os.path.join(self.directory, dotfile.path)
+        if dotfile.isdir():
+            # Clone directory structure.
+            os.makedirs(path)
+            # Schedule to copy metadata.
+            self.metadata.append((path, dotfile))
+        elif not dotfile.matches:
+            # Use hard links for unchanged files.
+            os.link(dotfile.path, path)
+        else:
+            # Copy changed files.
+            handle = open(path, 'w')
+            handle.write(dotfile.realdata)
+            handle.close()
+            # Including metadata.
+            self.copyinfo(path, dotfile.info)
+
+    def copyinfo(self, target, info):  # {{{3
+        os.chown(target, info.st_uid, info.st_gid)
+        os.utime(target, (info.st_atime, info.st_mtime))
+        os.chmod(target, info.st_mode)
+
+    def send(self, host, verbose, script):  # {{{2
+        script.message(0, "Uploading files to %s using rsync ..", host)
+        # Apply directory metadata.
+        for path, directory in reversed(self.metadata):
+            self.copyinfo(path, directory.info)
+        command = 'rsync -%sa "%s/" "%s:"' % (
+            verbose and 'v' or '', self.directory, host)
+        script.cmdmsg(command)
+        status = os.system(command)
+        if status:
+            script.cmderr(status, command)
+        script.message(
+            3, "Cleaning up temporary files in %s ..", self.directory)
+        shutil.rmtree(self.directory)
+
+
+class container:  # {{{1
+
+    def __init__(self, **kw):  # {{{2
+        for k, v in kw.iteritems():
+            setattr(self, k, v)
+
+    def isdir(self):
+        return not hasattr(self, 'data')
+
+# }}}1
+
+
+args = sys.argv
+name = args.pop(0)
+script = sync_dotfiles(name)
+script.run(args)
+
