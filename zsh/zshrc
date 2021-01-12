@@ -36,7 +36,16 @@ zplug "plugins/git", from:oh-my-zsh
 zplug "plugins/npm", from:oh-my-zsh
 zplug "plugins/yarn", from:oh-my-zsh
 zplug "plugins/nvm", from:oh-my-zsh
+zplug "plugins/python", from:oh-my-zsh
+zplug "plugins/pip", from:oh-my-zsh
+zplug "plugins/rsync", from:oh-my-zsh
 zplug "plugins/vscode", from:oh-my-zsh
+zplug "plugins/golang", from:oh-my-zsh
+zplug "plugins/virtualenv", from:oh-my-zsh
+zplug "plugins/virtualenvwrapper", from:oh-my-zsh
+zplug "plugins/copydir", from:oh-my-zsh
+zplug "plugins/copyfile", from:oh-my-zsh
+zplug "plugins/systemd", from:oh-my-zsh
 zplug "plugins/docker", from:oh-my-zsh
 zplug "plugins/docker-machine", from:oh-my-zsh
 zplug "plugins/docker-compose", from:oh-my-zsh
@@ -77,10 +86,14 @@ zplug "$HOME/$DOTFILES/zsh/plugins", from:local
 # ============================================================================= #
 #  ➜ ➜ ➜ PROFILES
 # ============================================================================= #
+if [[ "root" == "$USER" ]]; then
+zplug "themes/robbyrussell", from:oh-my-zsh, as:theme
+elif [[ "sall" == "$USER" ]]; then
 zplug "romkatv/powerlevel10k", as:theme, depth:1
+else
+zplug "$HOME/$DOTFILES/zsh/themes", from:local, as:theme, use:ss-o.zsh-theme
+fi
 #zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
-#zplug "themes/robbyrussell", from:oh-my-zsh, as:theme
-#zplug "$HOME/$DOTFILES/zsh/themes", from:local, as:theme, use:ss-o.zsh-theme
 # ============================================================================= #
 #  ➜ ➜ ➜ INSTALL ZPLUG & LOAD
 # ============================================================================= #
@@ -95,9 +108,11 @@ zplug load
 [ -f ~/.config/fzf/key-bindings.zsh ] && source ~/.config/fzf/key-bindings.zsh
 [ -f ~/.config/fzf/completion.zsh ] && source ~/.config/fzf/completion.zsh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+if [[ "sall" == "$USER" ]]; then
 #source ~/.dotfiles/zsh/config/p10k/p10k-lean.zsh
 #source ~/.dotfiles/zsh/config/p10k/p10k-classic.zsh
 #source ~/.dotfiles/zsh/config/p10k/p10k-rainbow.zsh
 #source ~/.dotfiles/zsh/config/p10k/p10k-lean-8colors.zsh
 #source ~/.dotfiles/zsh/config/p10k/p10k-robbyrussell.zsh
 source ~/.dotfiles/zsh/config/p10k/p10k-robby-by-sall.zsh
+fi
