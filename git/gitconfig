@@ -42,3 +42,5 @@
 	email = 59910950+ss-o@users.noreply.github.com
 [init]
 	defaultBranch = main
+[commit]
+	template = /home/sall/workspace/codespace/docs/custom/commit-conventions.txt

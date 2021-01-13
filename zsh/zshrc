@@ -16,16 +16,14 @@ for c in cp rm chmod chown rename; do
   alias $c="$c -v"
 done
 # ============================================================================= #
-#  ➜ ➜ ➜ ZPLUG
+#  ➜ ➜ ➜ CONFIGS
 # ============================================================================= #
 export ZPLUG_HOME="${XDG_CONFIG_HOME}/zplug"
 [ ! -d "$ZPLUG_HOME" ] && mkdir -p "$ZPLUG_HOME"
 [ ! -f "$ZPLUG_HOME/init.zsh" ] && git clone https://github.com/zplug/zplug "$ZPLUG_HOME"
 source "${ZPLUG_HOME}/init.zsh"
-
 ## Let zplug manage itself like other packages
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
-
 # Oh-My-Zsh core
 zplug "lib/*", from:oh-my-zsh
 # ============================================================================= #
@@ -37,6 +35,7 @@ zplug "plugins/npm", from:oh-my-zsh
 zplug "plugins/yarn", from:oh-my-zsh
 zplug "plugins/nvm", from:oh-my-zsh
 zplug "plugins/python", from:oh-my-zsh
+zplug "plugins/pyenv", from:oh-my-zsh
 zplug "plugins/pip", from:oh-my-zsh
 zplug "plugins/rvm", from:oh-my-zsh
 zplug "plugins/rsync", from:oh-my-zsh
@@ -67,19 +66,19 @@ zplug "plugins/gpg-agent", from:oh-my-zsh
 # ============================================================================= #
 #  ➜ ➜ ➜ ZPLUG EXTRAS
 # ============================================================================= #
-zplug "wuotr/zsh-plugin-vscode"
+#zplug "wuotr/zsh-plugin-vscode"
 zplug "zsh-users/zsh-autosuggestions"
 #zplug "marlonrichert/zsh-autocomplete"
 #zplug "zpm-zsh/ls" # ls alias (ls colors)
 #zplug "desyncr/auto-ls"
 zplug "lukechilds/zsh-nvm"
-#zplug "mattberther/zsh-pyenv"
+zplug "mattberther/zsh-pyenv"
 zplug "MichaelAquilina/zsh-you-should-use"
 zplug "unixorn/git-extra-commands"
 zplug "zdharma/fast-syntax-highlighting", defer:2
 zplug "hlissner/zsh-autopair", defer:2
 zplug "zsh-users/zsh-completions", defer:2
-zplug "lukechilds/zsh-better-npm-completion", defer:2
+#zplug "lukechilds/zsh-better-npm-completion", defer:2
 # ============================================================================= #
 #  ➜ ➜ ➜ LOCAL
 # ============================================================================= #

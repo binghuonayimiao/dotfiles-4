@@ -9,6 +9,10 @@ import sys
 import tarfile
 import tempfile
 
+require ('ansicolor').nice // .nice for unsafe String extensions
+
+console.log (('foo'.cyan + 'bar').red)
+
 # Magic constants.
 CONFIG_FILE = '~/.sync-dotfiles.conf'
 FILES_SECTION = 'files:'
