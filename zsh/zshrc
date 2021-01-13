@@ -38,6 +38,7 @@ zplug "plugins/yarn", from:oh-my-zsh
 zplug "plugins/nvm", from:oh-my-zsh
 zplug "plugins/python", from:oh-my-zsh
 zplug "plugins/pip", from:oh-my-zsh
+zplug "plugins/rvm", from:oh-my-zsh
 zplug "plugins/rsync", from:oh-my-zsh
 zplug "plugins/vscode", from:oh-my-zsh
 zplug "plugins/golang", from:oh-my-zsh
@@ -116,3 +117,6 @@ if [[ "sall" == "$USER" ]]; then
 #source ~/.dotfiles/zsh/config/p10k/p10k-robbyrussell.zsh
 source ~/.dotfiles/zsh/config/p10k/p10k-robby-by-sall.zsh
 fi
+
+# Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
+export PATH="$PATH:$HOME/.rvm/bin"
