@@ -103,7 +103,7 @@ else
     git clone $GITOPT "$ORIGIN" "$HOME/$DOTFILES"
 fi
 source "$HOME/$DOTFILES/lib/utilities.sh"
-source "$HOME/$DOTFILES/lib/installer.sh"
+#source "$HOME/$DOTFILES/lib/installer.sh"
 
 NEVER_ROOT
 # ============================================================================= #

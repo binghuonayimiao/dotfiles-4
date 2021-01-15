@@ -88,11 +88,12 @@ zplug "$HOME/$DOTFILES/zsh/plugins", from:local
 # ============================================================================= #
 if [[ "root" == "$USER" ]]; then
 zplug "themes/robbyrussell", from:oh-my-zsh, as:theme
-elif [[ "sall" == "$USER" ]]; then
-zplug "romkatv/powerlevel10k", as:theme, depth:1
-else
-zplug "$HOME/$DOTFILES/zsh/themes", from:local, as:theme, use:ss-o.zsh-theme
 fi
+#elif [[ "sall" == "$USER" ]]; then
+zplug "romkatv/powerlevel10k", as:theme, depth:1
+#else
+#zplug "$HOME/$DOTFILES/zsh/themes", from:local, as:theme, use:ss-o.zsh-theme
+#fi
 #zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
 # ============================================================================= #
 #  ➜ ➜ ➜ INSTALL ZPLUG & LOAD
@@ -108,14 +109,14 @@ zplug load
 [ -f ~/.config/fzf/key-bindings.zsh ] && source ~/.config/fzf/key-bindings.zsh
 [ -f ~/.config/fzf/completion.zsh ] && source ~/.config/fzf/completion.zsh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-if [[ "sall" == "$USER" ]]; then
+#f [[ "sall" == "$USER" ]]; then
 #source ~/.dotfiles/zsh/config/p10k/p10k-lean.zsh
 #source ~/.dotfiles/zsh/config/p10k/p10k-classic.zsh
 #source ~/.dotfiles/zsh/config/p10k/p10k-rainbow.zsh
 #source ~/.dotfiles/zsh/config/p10k/p10k-lean-8colors.zsh
 #source ~/.dotfiles/zsh/config/p10k/p10k-robbyrussell.zsh
 source ~/.dotfiles/zsh/config/p10k/p10k-robby-by-sall.zsh
-fi
+#fi
 
 # Add RVM to PATH for scripting. Make sure this is the last PATH variable change.
 export PATH="$PATH:$HOME/.rvm/bin"
