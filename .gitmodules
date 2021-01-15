@@ -1,3 +1,7 @@
 [submodule "lib"]
 	path = lib
 	url = https://github.com/ss-o/lib.git
+[submodule "nb"]
+	path = private
+	url = https://github.com/ss-o/private.git
+	branch = nb
