@@ -10,11 +10,6 @@ for load in $HOME/.dotfiles/zsh/config/*.zsh; do
     fi
 done
 unset load
-# Interactive/verbose commands.
-alias mv='mv -i'
-for c in cp rm chmod chown rename; do
-  alias $c="$c -v"
-done
 # ============================================================================= #
 #  ➜ ➜ ➜ CONFIGS
 # ============================================================================= #
@@ -40,17 +35,18 @@ zplug "plugins/pip", from:oh-my-zsh
 zplug "plugins/rvm", from:oh-my-zsh
 zplug "plugins/rsync", from:oh-my-zsh
 zplug "plugins/vscode", from:oh-my-zsh
-zplug "plugins/golang", from:oh-my-zsh
+#zplug "plugins/golang", from:oh-my-zsh
 zplug "plugins/virtualenv", from:oh-my-zsh
 zplug "plugins/virtualenvwrapper", from:oh-my-zsh
-zplug "plugins/copydir", from:oh-my-zsh
-zplug "plugins/copyfile", from:oh-my-zsh
-zplug "plugins/systemd", from:oh-my-zsh
+#zplug "plugins/copydir", from:oh-my-zsh
+#zplug "plugins/copyfile", from:oh-my-zsh
+#zplug "plugins/systemd", from:oh-my-zsh
 zplug "plugins/docker", from:oh-my-zsh
-zplug "plugins/docker-machine", from:oh-my-zsh
-zplug "plugins/docker-compose", from:oh-my-zsh
+#zplug "plugins/docker-machine", from:oh-my-zsh
+#zplug "plugins/docker-compose", from:oh-my-zsh
 zplug "plugins/colorize", from:oh-my-zsh
-zplug "plugins/taskwarrior", from:oh-my-zsh
+zplug "plugins/comand-not-fount", from:oh-my-zsh
+#zplug "plugins/taskwarrior", from:oh-my-zsh
 zplug "plugins/sudo", from:oh-my-zsh
 zplug "plugins/extract", from:oh-my-zsh
 zplug "plugins/completion", from:oh-my-zsh
