@@ -43,4 +43,4 @@
 [init]
 	defaultBranch = main
 [commit]
-	template = /home/sall/workspace/codespace/docs/custom/commit-conventions.txt
+	template = ~/.dotfiles/.commit-conventions.txt
